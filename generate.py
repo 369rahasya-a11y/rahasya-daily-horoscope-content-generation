@@ -1,3 +1,4 @@
+````python
 import json
 import os
 import requests
@@ -14,43 +15,61 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 with open("prompt.txt", "r", encoding="utf-8") as f:
     prompt = f.read()
 
-# REQUEST
-response = requests.post(
-    "https://openrouter.ai/api/v1/chat/completions",
-    headers={
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    },
-    json={
-        "model": "meta-llama/llama-3.3-70b-instruct:free",
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    }
-)
+MAX_RETRIES = 5
 
-# DEBUG
-print("STATUS:", response.status_code)
-print("RAW RESPONSE:")
-print(response.text)
+for attempt in range(MAX_RETRIES):
 
-# CONVERT JSON
-result = response.json()
+    response = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "meta-llama/llama-3.3-70b-instruct:free",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        }
+    )
 
-# SAFETY CHECK
-if "choices" not in result:
+    print("STATUS:", response.status_code)
+
+    result = response.json()
+
+    # SUCCESS
+    if "choices" in result:
+        break
+
+    # RATE LIMIT
+    if response.status_code == 429:
+        retry_time = 30
+
+        try:
+            retry_time = result["error"]["metadata"]["retry_after_seconds"]
+        except:
+            pass
+
+        print(f"Rate limited. Waiting {retry_time} seconds...")
+
+        time.sleep(retry_time)
+
+        continue
+
+    # OTHER ERRORS
     raise Exception(f"OpenRouter Error: {result}")
 
+# FINAL TEXT
 text = result["choices"][0]["message"]["content"]
 
 # CLEAN JSON
 if text.startswith("```json"):
     text = text.replace("```json", "").replace("```", "")
 
-# PARSE
+# PARSE JSON
 parsed = json.loads(text)
 
 # CONNECT SUPABASE
@@ -59,7 +78,7 @@ supabase = create_client(
     SUPABASE_KEY
 )
 
-# INSERT
+# INSERT DATA
 for item in parsed["horoscopes"]:
     supabase.table("horoscopes").upsert({
         "horoscope_date": parsed["date"],
@@ -69,3 +88,4 @@ for item in parsed["horoscopes"]:
     }).execute()
 
 print("All horoscopes uploaded successfully.")
+````
