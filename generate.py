@@ -22,7 +22,7 @@ response = requests.post(
         "Content-Type": "application/json"
     },
     json={
-        "model": "mistralai/mistral-7b-instruct:free",
+        "model": "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
         "messages": [
             {
                 "role": "user",
