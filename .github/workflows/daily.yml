@@ -1,40 +1,31 @@
-name: Cosmic Mood Engine
+name: Daily Horoscope Generator
 
 on:
   schedule:
-    # Automatically triggers every single day at 00:00 UTC (5:30 AM IST)
     - cron: '0 0 * * *'
-  # Allows you to click the manual "Run workflow" button inside GitHub anytime
+
   workflow_dispatch:
 
-# Gives the GitHub automation runner security clearance to save files back to your repository
-permissions:
-  contents: write
-
 jobs:
-  run-generator:
+  generate:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Configure Python Environment
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install System Dependencies
-        run: pip install requests
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
-      - name: Execute Gemini Content Pipeline
+      - name: Run Generator
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python generate.py
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Commit and Push Updated Horoscopes
-        run: |
-          git config --global user.name 'Cosmic Mood Engine Bot'
-          git config --global user.email 'bot@cosmicmood.com'
-          git add horoscopes.json
-          git commit -m "Automated Content Update: New daily horoscopes sync completed" || echo "No data changes detected today."
-          git push
+        run: python generate.py
