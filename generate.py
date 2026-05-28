@@ -1,3 +1,4 @@
+````python id="finalcleancode"
 import json
 import os
 import time
@@ -151,9 +152,6 @@ RULES:
 
         text = completion.choices[0].message.content.strip()
 
-        print("\nRAW RESPONSE:\n")
-        print(text)
-
         # =========================
         # CLEAN RESPONSE
         # =========================
@@ -162,16 +160,19 @@ RULES:
         text = text.replace("```", "")
         text = text.strip()
 
-        # FIND JSON START
         json_start = text.find("{")
-
-        # FIND JSON END
         json_end = text.rfind("}")
 
         if json_start != -1 and json_end != -1:
             text = text[json_start:json_end + 1]
 
-               count = 0
+        print("Parsing JSON...")
+
+        parsed = json.loads(text)
+
+        print("Uploading...")
+
+        count = 0
 
         for item in parsed["horoscopes"]:
 
@@ -181,7 +182,8 @@ RULES:
                     "sign": parsed["sign"],
                     "mood": item["mood"],
                     "content": item["content"]
-                }
+                },
+                on_conflict="horoscope_date,sign,mood"
             ).execute()
 
             count += 1
@@ -202,3 +204,4 @@ RULES:
     time.sleep(8)
 
 print("\nALL 180 HOROSCOPES GENERATED")
+````
