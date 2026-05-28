@@ -138,7 +138,7 @@ RULES:
 
         for item in parsed["horoscopes"]:
 
-            supabase.table("horoscopes").upsert(
+            supabase.table("horoscopes").insert(
                 {
                     "horoscope_date": parsed["date"],
                     "sign": parsed["sign"],
