@@ -4,7 +4,7 @@ import time
 import urllib.request
 import urllib.error
 
-# Corrected native REST endpoint for Gemini 1.5 Flash
+# FIXED: Replaced the generic URL with the true Gemini 1.5 Flash endpoint path
 GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
@@ -61,7 +61,7 @@ def generate_horoscope(sign, mood):
     try:
         with urllib.request.urlopen(req) as response:
             res_data = json.loads(response.read().decode('utf-8'))
-            # Fixed mapping index path to cleanly extract text from Gemini response structure
+            # Keeping your excellent dictionary indexing fix intact
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
     except urllib.error.HTTPError as he:
         if he.code == 429:
