@@ -1,13 +1,10 @@
-name: Cosmic Mood Engine
+     name: Cosmic Mood Engine
 
 on:
   schedule:
-    # Automatically triggers every single day at 00:00 UTC (5:30 AM IST)
     - cron: '0 0 * * *'
-  # Allows you to click the manual "Run workflow" button inside GitHub anytime
   workflow_dispatch:
 
-# Gives the GitHub automation runner security clearance to save files back to your repository
 permissions:
   contents: write
 
@@ -15,24 +12,27 @@ jobs:
   run-generator:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code Repository
-      uses: actions/checkout@v4
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
 
-    - name: Configure Python Environment
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Configure Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Execute Gemini Content Pipeline
-      env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      run: python generate.py
+      - name: Install System Dependencies
+        run: pip install requests
 
-    - name: Commit and Push Updated Horoscopes
-      run: |
-        git config --global user.name 'Cosmic Mood Engine Bot'
-        git config --global user.email 'bot@cosmicmood.com'
-        git add horoscopes.json
-        # The true || fallback prevents the workflow from crashing if no text changed
-        git commit -m "Automated Content Update: New daily horoscopes sync completed" || echo "No data changes detected today."
-        git push
+      - name: Execute Gemini Content Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python generate.py
+
+      - name: Commit and Push Updated Horoscopes
+        run: |
+          git config --global user.name 'Cosmic Mood Engine Bot'
+          git config --global user.email 'bot@cosmicmood.com'
+          git add horoscopes.json
+          git commit -m "Automated Content Update: New daily horoscopes sync completed" || echo "No data changes detected today."
+          git push
+
