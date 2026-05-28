@@ -43,23 +43,34 @@ for sign, mood in itertools.product(signs, moods):
     5. Introduce absolute variety. Avoid using common astrological clichés like "The stars align," "Cosmic shift," or repeating sentence structures from yesterday. Make every generation unique.
     """
     
-    try:
-        response = ai_client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=prompt,
-        )
-        text = response.text.strip()
-        
-        supabase.table("daily_horoscopes").insert({
-            "zodiac_sign": sign,
-            "mood": mood,
-            "horoscope_text": text
-        }).execute()
-        
-    except Exception as e:
-        print(f"Error generating for {sign}-{mood}: {e}")
+    # Retry mechanism loop (will try up to 3 times if Google rate limits us)
+    for attempt in range(3):
+        try:
+            response = ai_client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+            )
+            text = response.text.strip()
+            
+            # Insert cleanly to Supabase
+            supabase.table("daily_horoscopes").insert({
+                "zodiac_sign": sign,
+                "mood": mood,
+                "horoscope_text": text
+            }).execute()
+            
+            print(f"✅ Saved successfully: {sign} ({mood})")
+            break # Success! Break out of the retry loop
+            
+        except Exception as e:
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                print(f"⚠️ Google rate limit hit. Cool down cooling active. Retrying attempt {attempt + 1} in 35 seconds...")
+                time.sleep(35) # Wait out Google's penalty window
+            else:
+                print(f"❌ Error generating for {sign}-{mood}: {e}")
+                break
     
-    # 2-second rate buffer for publishable key stability
-    time.sleep(2)
+    # Standard steady pace pause between items
+    time.sleep(13)
 
 print("All 180 horoscopes successfully synced to the cloud database!")
