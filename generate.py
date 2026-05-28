@@ -69,4 +69,3 @@ for item in parsed["horoscopes"]:
     }).execute()
 
 print("All horoscopes uploaded successfully.")
-````
