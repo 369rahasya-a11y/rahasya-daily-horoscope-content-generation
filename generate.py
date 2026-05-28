@@ -2,9 +2,11 @@ import os
 import json
 import time
 import urllib.request
+import urllib.error
 
-GROQ_API_URL = "https://groq.com"
-API_KEY = os.environ.get("GROQ_API_KEY")
+# Native Endpoint Config (Using Gemini Flash for reliable, high-speed free processing)
+GEMINI_URL = "https://googleapis.com"
+API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
 
 SIGNS = [
@@ -38,46 +40,67 @@ def generate_horoscope(sign, mood):
         f"2. Sentence 1: emotional/cosmic atmosphere.\n"
         f"3. Sentence 2: practical advice or mental shift.\n"
         f"4. Sentence 3: emotional realization or perspective shift.\n"
-        f"Return ONLY the 3-sentence horoscope text. No notes, no introduction."
+        f"Return ONLY the 3-sentence horoscope text. No notes, no introduction, no markdown."
     )
 
+    # Clean REST API Structure formatting for native Google API ingestion
     payload = {
-        "model": "llama3-8b-8192",
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 150
+        }
     }
 
+    # Authenticate via native URL API Key parameter to avoid header injection issues
+    target_url = f"{GEMINI_URL}?key={API_KEY}"
     req = urllib.request.Request(
-        GROQ_API_URL, 
+        target_url, 
         data=json.dumps(payload).encode('utf-8'), 
-        headers={'Content-Type': 'application/json', 'Authorization': f"Bearer {API_KEY}"}
+        headers={'Content-Type': 'application/json'}
     )
     
     try:
         with urllib.request.urlopen(req) as response:
             res_data = json.loads(response.read().decode('utf-8'))
-            return res_data["choices"]["message"]["content"].strip()
+            # Parse text response safely out of the standard nested Gemini structure
+            return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
+    except urllib.error.HTTPError as he:
+        if he.code == 429:
+            print("⚠️ Rate limit hit. Cooling down system extra...")
+            time.sleep(15) # Extended recovery pause
+            return generate_horoscope(sign, mood) # Retry block
+        print(f"HTTP Error {he.code} on {sign}-{mood}: {he.read().decode('utf-8')}")
+        return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
     except Exception as e:
-        print(f"Error {sign}-{mood}: {e}")
+        print(f"Error executing {sign}-{mood}: {e}")
         return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
 
 def main():
+    if not API_KEY:
+        print("❌ CRITICAL ERROR: GEMINI_API_KEY environment variable is missing!")
+        return
+
     master_database = {}
     total = len(SIGNS) * len(MOODS)
     count = 0
     
-    print(f"Starting generation for {total} items...")
+    print(f"Starting Gemini Cloud content generation pipeline for {total} profiles...")
     for sign in SIGNS:
         master_database[sign] = {}
         for mood in MOODS:
             count += 1
-            print(f"[{count}/{total}] Processing {sign} - {mood}")
+            print(f"[{count}/{total}] Processing Content Profile: {sign} + {mood}")
             master_database[sign][mood] = generate_horoscope(sign, mood)
-            time.sleep(2) # Keeps us safely within Groq's free tier limits
+            
+            # Crucial 4.5 second delay protects your Free Tier limits seamlessly (approx 13 requests/min)
+            time.sleep(4.5)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(master_database, f, indent=4, ensure_ascii=False)
-    print("Done!")
+    print("✨ Content system sync operation successfully completed!")
 
 if __name__ == "__main__":
     main()
