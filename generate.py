@@ -72,6 +72,10 @@ Generate horoscopes ONLY for:
 Generate all 15 moods.
 
 Return ONLY valid JSON.
+
+Do not add explanations.
+Do not add markdown.
+Do not wrap JSON in triple backticks.
 """
 
     try:
@@ -87,17 +91,40 @@ Return ONLY valid JSON.
                 }
             ],
             temperature=0.9,
-            max_tokens=4000
+            max_tokens=2500
         )
 
         text = completion.choices[0].message.content
 
-        # CLEAN JSON
+        print("\nRAW RESPONSE:\n")
+        print(text)
+
+        # =========================
+        # CLEAN RESPONSE
+        # =========================
+
         if text.startswith("```json"):
             text = text.replace("```json", "")
+
+        if text.startswith("```"):
             text = text.replace("```", "")
 
         text = text.strip()
+
+        # FIND JSON START
+        json_start = text.find("{")
+
+        if json_start != -1:
+            text = text[json_start:]
+
+        # FIND JSON END
+        json_end = text.rfind("}")
+
+        if json_end != -1:
+            text = text[:json_end + 1]
+
+        print("\nCLEANED JSON:\n")
+        print(text)
 
         print("Parsing JSON...")
 
