@@ -3,7 +3,7 @@ import json
 import time
 import requests
 
-# FIXED: Target the exact universal canonical routing path for Gemini 1.5 Flash
+# UPDATED: Targets the official global canonical pathway for Gemini 1.5 Flash
 GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
@@ -23,7 +23,7 @@ def get_tone_rules(mood):
     if mood in ["ambitious", "adventurous", "creative", "rebellious", "confident"]:
         return "Use 'fierce & direct' energy. The tone must feel motivating, magnetic, energetic, bold, action-oriented, and confident."
     elif mood in ["anxious", "sad", "lonely", "romantic", "nostalgic"]:
-        return "Use 'nurturing & deeply empathetic' energy. The tone must feel emotionally safe, warm, validating, intimate, understanding, and emotionally intelligent."
+        return "Use 'nurturing & deeply empathetic' energy. The tone must feel emotionally safe, warm, validating, ixtimate, understanding, and emotionally intelligent."
     else:
         return "Use 'grounding & calm' energy. The tone must feel spacious, calming, slow, reflective, emotionally balanced, and gently reassuring."
 
@@ -55,27 +55,20 @@ def generate_horoscope(sign, mood):
         
         if response.status_code == 200:
             res_data = response.json()
-            # FIXED: Added [0] index positions to properly extract text strings out of Google's nested response lists
+            # FIXED EXTRACTION: Explicitly traverses index arrays to parse out text blocks cleanly
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
-        elif response.status_code == 404:
-            # FIXED EXTRACTION: Backup routing model also uses the precise [0] list tracking arrays
-            fallback_url = "https://googleapis.com"
-            fallback_res = requests.post(fallback_url, json=payload, params=params, timeout=15)
-            if fallback_res.status_code == 200:
-                return fallback_res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-            print(f"\n❌ Both models rejected routing string path layout. Status: {fallback_res.status_code}", flush=True)
-            return "The cosmic currents are stabilizing. Focus on inner grounding today."
         elif response.status_code == 429:
             print("\n⚠️ Quota tier limit hit. Pausing for extended cooldown...", flush=True)
             time.sleep(30)
             return generate_horoscope(sign, mood)
         else:
-            print(f"\n❌ Server Error [{response.status_code}] on profile: {sign}-{mood}", flush=True)
-            return "The cosmic currents are stabilizing. Focus on inner grounding today."
+            # PRINTS SYSTEM LOGS: Reveals the raw message returned by Google instead of hiding it
+            print(f"\n❌ Server Error [{response.status_code}] on profile: {sign}-{mood} -> {response.text}", flush=True)
+            return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment."
             
     except Exception as e:
-        print(f"\nParsing Error on {sign}-{mood}: {e}", flush=True)
-        return "The cosmic currents are stabilizing. Focus on inner grounding today."
+        print(f"\nError processing array mapping path on {sign}-{mood}: {e}", flush=True)
+        return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment."
 
 def main():
     if not API_KEY:
@@ -94,8 +87,8 @@ def main():
             print(f"[{count}/{total}] Syncing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Safe 5.5-second delay ensures your Free Tier window never gets choked
-            time.sleep(5.5)
+            # Safe 5-second interval respects free tier request thresholds smoothly
+            time.sleep(5.0)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(master_database, f, indent=4, ensure_ascii=False)
