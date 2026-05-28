@@ -171,16 +171,7 @@ RULES:
         if json_start != -1 and json_end != -1:
             text = text[json_start:json_end + 1]
 
-        print("\nCLEANED JSON:\n")
-        print(text)
-
-        print("Parsing JSON...")
-
-        parsed = json.loads(text)
-
-        print("Uploading...")
-
-        count = 0
+               count = 0
 
         for item in parsed["horoscopes"]:
 
