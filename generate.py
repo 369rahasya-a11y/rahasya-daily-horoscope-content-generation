@@ -1,6 +1,8 @@
+````python
 import json
 import os
 import requests
+import time
 
 from supabase import create_client
 
@@ -13,7 +15,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 with open("prompt.txt", "r", encoding="utf-8") as f:
     prompt = f.read()
 
-# OPENROUTER REQUEST
+# REQUEST
 response = requests.post(
     "https://openrouter.ai/api/v1/chat/completions",
     headers={
@@ -21,7 +23,7 @@ response = requests.post(
         "Content-Type": "application/json"
     },
     json={
-        "model": "deepseek/deepseek-chat-v3-0324:free",
+        "model": "qwen/qwen3-32b:free",
         "messages": [
             {
                 "role": "user",
@@ -31,7 +33,17 @@ response = requests.post(
     }
 )
 
+# DEBUG
+print("STATUS:", response.status_code)
+print("RAW RESPONSE:")
+print(response.text)
+
+# CONVERT JSON
 result = response.json()
+
+# SAFETY CHECK
+if "choices" not in result:
+    raise Exception(f"OpenRouter Error: {result}")
 
 text = result["choices"][0]["message"]["content"]
 
@@ -39,9 +51,10 @@ text = result["choices"][0]["message"]["content"]
 if text.startswith("```json"):
     text = text.replace("```json", "").replace("```", "")
 
+# PARSE
 parsed = json.loads(text)
 
-# SUPABASE
+# CONNECT SUPABASE
 supabase = create_client(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -56,4 +69,5 @@ for item in parsed["horoscopes"]:
         "content": item["content"]
     }).execute()
 
-print("Uploaded successfully")
+print("All horoscopes uploaded successfully.")
+````
