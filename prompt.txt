@@ -269,8 +269,8 @@ Avoid repetitive cadence.
 OUTPUT RULES
 ━━━━━━━━━━━━━━━━━━
 
-* Between 50 and 70 words
-* Exactly 3 sentences
+* Between 150 and 170 words
+* Exactly 6 sentences
 * Unique phrasing every time
 * Emotionally rich
 * Conversational
