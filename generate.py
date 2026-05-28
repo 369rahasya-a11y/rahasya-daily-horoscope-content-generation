@@ -1,28 +1,32 @@
 import json
 import os
 import time
-import requests
 
+from groq import Groq
 from supabase import create_client
 
 # =========================
 # ENV VARIABLES
 # =========================
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 # =========================
-# CONNECT SUPABASE
+# CLIENTS
 # =========================
+
+client = Groq(
+    api_key=GROQ_API_KEY
+)
 
 supabase = create_client(
     SUPABASE_URL,
     SUPABASE_KEY
 )
 
-print("SUPABASE CONNECTED")
+print("CONNECTED")
 
 # =========================
 # SIGNS
@@ -72,40 +76,21 @@ Return ONLY valid JSON.
 
     try:
 
-        print("Sending request...")
+        print("Generating...")
 
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "meta-llama/llama-3.3-70b-instruct:free",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                "temperature": 0.9,
-                "max_tokens": 4000
-            },
-            timeout=45
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.9,
+            max_tokens=4000
         )
 
-        print("STATUS:", response.status_code)
-
-        result = response.json()
-
-        if "choices" not in result:
-
-            print("FAILED:")
-            print(result)
-
-            continue
-
-        text = result["choices"][0]["message"]["content"]
+        text = completion.choices[0].message.content
 
         # CLEAN JSON
         if text.startswith("```json"):
@@ -118,7 +103,7 @@ Return ONLY valid JSON.
 
         parsed = json.loads(text)
 
-        print("Uploading to Supabase...")
+        print("Uploading...")
 
         count = 0
 
@@ -133,13 +118,13 @@ Return ONLY valid JSON.
 
             count += 1
 
-        print(f"SUCCESS: Uploaded {count} horoscopes")
+        print(f"SUCCESS: Uploaded {count}")
 
     except Exception as e:
 
-        print("ERROR:")
+        print("FAILED:")
         print(str(e))
 
-    time.sleep(35)
+    time.sleep(3)
 
 print("\nALL DONE")
