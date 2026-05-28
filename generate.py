@@ -35,8 +35,6 @@ SIGNS = [
 # FREE MODELS
 MODELS = [
     "openrouter/free",
-    "deepseek/deepseek-chat-v3-0324:free",
-    "mistralai/mistral-small-3.1-24b-instruct:free",
     "meta-llama/llama-3.3-70b-instruct:free"
 ]
 
