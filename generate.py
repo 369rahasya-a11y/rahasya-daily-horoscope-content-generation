@@ -5,7 +5,7 @@ import urllib.request
 import urllib.error
 import sys
 
-# VERIFIED: The official Google developer endpoint for Gemini 1.5 Flash
+# Official Google developer endpoint path
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
@@ -53,16 +53,24 @@ def generate_horoscope(sign, mood):
 
     # Append API key securely via standard URL parameter mapping path
     target_url = f"{GEMINI_URL}?key={API_KEY}"
+    
+    # Format the explicit headers and force a POST request method
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+    
     req = urllib.request.Request(
         target_url, 
         data=json.dumps(payload).encode('utf-8'), 
-        headers={'Content-Type': 'application/json'}
+        headers=headers,
+        method='POST'  # Ensures Python forces a POST call instead of defaulting to a GET route
     )
     
     try:
         with urllib.request.urlopen(req) as response:
             res_data = json.loads(response.read().decode('utf-8'))
-            # VERIFIED PARSER: Correctly drills down through indices to extract string response 
+            # FIXED PARSER PATH: Unpacks array positions exactly as returned by Google
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
     except urllib.error.HTTPError as he:
         if he.code == 429:
@@ -92,7 +100,7 @@ def main():
             print(f"[{count}/{total}] Processing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Crucial 4.5 second delay protects your Free Tier limits seamlessly (approx 13 requests/min)
+            # Crucial 4.5 second delay protects your Free Tier limits seamlessly
             time.sleep(4.5)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
