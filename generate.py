@@ -1,12 +1,10 @@
 import os
 import json
 import time
-import urllib.request
-import urllib.error
-import sys
+import requests # Upgraded to use official stable requests library
 
-# Production REST endpoint for the current Gemini 1.5 Flash model stable build
-GEMINI_URL = "https://googleapis.com"
+# Official endpoint route for Gemini 1.5 Flash
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
 
@@ -51,35 +49,25 @@ def generate_horoscope(sign, mood):
         }]
     }
 
-    # Pass the API Key securely as a standard path parameter string 
-    target_url = f"{GEMINI_URL}?key={API_KEY}"
-    
-    # Enforce standard browser validation parameters to clear CDN firewalls
-    headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    }
-    
-    # Explicitly configure the HTTP object as a POST call to bypass 404 fallback routing
-    req = urllib.request.Request(
-        target_url, 
-        data=json.dumps(payload).encode('utf-8'), 
-        headers=headers,
-        method='POST'
-    )
+    # Pass the API key cleanly inside URL parameter configurations
+    params = {"key": API_KEY}
     
     try:
-        with urllib.request.urlopen(req) as response:
-            res_data = json.loads(response.read().decode('utf-8'))
-            # FIXED EXTRACTION: Explicitly traverses index arrays to parse out text blocks cleanly
+        # requests automatically structures the POST handshake with ideal agent layers
+        response = requests.post(GEMINI_URL, json=payload, params=params, timeout=10)
+        
+        if response.status_code == 200:
+            res_data = response.json()
+            # FIXED EXTRACTION: Safely drills down array structures natively
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except urllib.error.HTTPError as he:
-        if he.code == 429:
+        elif response.status_code == 429:
             print("\n⚠️ Rate limit hit. Cooling down system extra...", flush=True)
             time.sleep(25)
             return generate_horoscope(sign, mood)
-        print(f"\nHTTP Error {he.code} on {sign}-{mood}", flush=True)
-        return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
+        else:
+            print(f"\n❌ Server Error {response.status_code} on {sign}-{mood}", flush=True)
+            return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
+            
     except Exception as e:
         print(f"\nError executing {sign}-{mood}: {e}", flush=True)
         return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
@@ -101,7 +89,7 @@ def main():
             print(f"[{count}/{total}] Processing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Expanded 5.0s rate buffer protects free processing limits reliably
+            # Expanded delay protects your free tier quotas seamlessly
             time.sleep(5.0)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
