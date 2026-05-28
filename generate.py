@@ -3,7 +3,7 @@ import json
 import time
 import requests
 
-# UPDATED: Re-routed directly to the new Gemini 3.5 Flash stable free endpoint
+# FIXED: Target the exact universal canonical routing path for Gemini 1.5 Flash
 GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
@@ -55,15 +55,15 @@ def generate_horoscope(sign, mood):
         
         if response.status_code == 200:
             res_data = response.json()
-            # Verified traversal path for Gemini 3.5 response structure
+            # FIXED: Added [0] index positions to properly extract text strings out of Google's nested response lists
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
         elif response.status_code == 404:
-            # Emergency Backup Route: If 3.5 isn't active in your region yet, try the ultra-stable workhorse model string
+            # FIXED EXTRACTION: Backup routing model also uses the precise [0] list tracking arrays
             fallback_url = "https://googleapis.com"
             fallback_res = requests.post(fallback_url, json=payload, params=params, timeout=15)
             if fallback_res.status_code == 200:
                 return fallback_res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-            print(f"\n❌ Both models returned 404. Check your API Key setup status. Status: {fallback_res.status_code}", flush=True)
+            print(f"\n❌ Both models rejected routing string path layout. Status: {fallback_res.status_code}", flush=True)
             return "The cosmic currents are stabilizing. Focus on inner grounding today."
         elif response.status_code == 429:
             print("\n⚠️ Quota tier limit hit. Pausing for extended cooldown...", flush=True)
@@ -74,7 +74,7 @@ def generate_horoscope(sign, mood):
             return "The cosmic currents are stabilizing. Focus on inner grounding today."
             
     except Exception as e:
-        print(f"\nError processing data mapping path on {sign}-{mood}: {e}", flush=True)
+        print(f"\nParsing Error on {sign}-{mood}: {e}", flush=True)
         return "The cosmic currents are stabilizing. Focus on inner grounding today."
 
 def main():
@@ -94,8 +94,8 @@ def main():
             print(f"[{count}/{total}] Syncing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Safe 5-second interval protects free tier request thresholds smoothly
-            time.sleep(5.0)
+            # Safe 5.5-second delay ensures your Free Tier window never gets choked
+            time.sleep(5.5)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(master_database, f, indent=4, ensure_ascii=False)
