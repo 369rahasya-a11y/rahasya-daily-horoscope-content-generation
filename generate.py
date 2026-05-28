@@ -1,94 +1,83 @@
 import os
+import json
 import time
-import itertools
-import requests
+import urllib.request
 
-# Pointing to the new cache-busting variable name
-url = os.environ["FINAL_DATABASE_URL"]
-key = os.environ["SUPABASE_KEY"]
-gemini_key = os.environ["GEMINI_API_KEY"]
+GROQ_API_URL = "https://groq.com"
+API_KEY = os.environ.get("GROQ_API_KEY")
+OUTPUT_FILE = "horoscopes.json"
 
-signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
-moods = ["Ambitious", "Adventurous", "Creative", "Rebellious", "Confident", "Anxious", "Sad", "Lonely", "Romantic", "Nostalgic", "Exhausted", "Lazy", "Peaceful", "Daydreamy", "Irritated"]
+SIGNS = [
+    "aries", "taurus", "gemini", "cancer", "leo", "virgo", 
+    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"
+]
 
-# Direct API Headers for Supabase REST endpoints
-supabase_headers = {
-    "apikey": key,
-    "Authorization": f"Bearer {key}",
-    "Content-Type": "application/json",
-    "Prefer": "resolution=merge-duplicates"
-}
+MOODS = [
+    "ambitious", "adventurous", "creative", "rebellious", "confident",
+    "anxious", "sad", "lonely", "romantic", "nostalgic",
+    "exhausted", "lazy", "peaceful", "daydreamy", "irritated"
+]
 
-print("Clearing yesterday's forecast...")
-try:
-    # Direct delete API call to clear out old table rows safely
-    res = requests.delete(f"{url}/daily_horoscopes?zodiac_sign=not.eq.", headers=supabase_headers)
-    print(f"Database reset status code: {res.status_code}")
-except Exception as e:
-    print(f"Notice: Clear operation log: {e}")
+def get_tone_rules(mood):
+    if mood in ["ambitious", "adventurous", "creative", "rebellious", "confident"]:
+        return "Use 'fierce & direct' energy. The tone must feel motivating, magnetic, energetic, bold, action-oriented, and confident."
+    elif mood in ["anxious", "sad", "lonely", "romantic", "nostalgic"]:
+        return "Use 'nurturing & deeply empathetic' energy. The tone must feel emotionally safe, warm, validating, intimate, understanding, and emotionally intelligent."
+    else:
+        return "Use 'grounding & calm' energy. The tone must feel spacious, calming, slow, reflective, emotionally balanced, and gently reassuring."
 
-print("Starting cosmic generations...")
-for sign, mood in itertools.product(signs, moods):
-    print(f"👉 Processing: {sign} + {mood}...")
-    
-    prompt = f"""
-    You are an expert, modern astrologer who writes intuitive, empathetic, and culturally relevant horoscopes. 
-    Generate a daily horoscope for:
-    - Zodiac Sign: {sign}
-    - Selected Mood: {mood}
+def generate_horoscope(sign, mood):
+    tone_instructions = get_tone_rules(mood)
+    prompt = (
+        f"Write a modern daily horoscope for the zodiac sign '{sign}'. "
+        f"The emotional atmosphere must mirror the feeling of being '{mood}', "
+        f"BUT YOU MUST NEVER DIRECTLY MENTION THE WORD '{mood}' OR ANY DIRECT SYNONYMS. "
+        f"{tone_instructions}\n\n"
+        f"STRICT WRITING RULES:\n"
+        f"1. Must be between 50 and 70 words total.\n"
+        f"2. Sentence 1: emotional/cosmic atmosphere.\n"
+        f"3. Sentence 2: practical advice or mental shift.\n"
+        f"4. Sentence 3: emotional realization or perspective shift.\n"
+        f"Return ONLY the 3-sentence horoscope text. No notes, no introduction."
+    )
 
-    [TONE INSTRUCTIONS BASED ON MOOD]
-    - If Mood is (Ambitious, Adventurous, Creative, Rebellious, Confident): Use "Fierce & Direct" energy. Cosmic hype-man. Use active verbs. Urge action.
-    - If Mood is (Anxious, Sad, Lonely, Romantic, Nostalgic): Use "Nurturing & Deeply Empathetic" energy. Validate emotional depth. Speak softly. 
-    - If Mood is (Exhausted, Lazy, Peaceful, Daydreamy, Irritated): Use "Grounding & Calm" energy. Give permission to slow down or protect peace.
-
-    [STRICT WRITING RULES]
-    1. Never mention the name of the mood directly in the text. Mirror the feeling.
-    2. Structure: Sentence 1: Acknowledge energy. Sentence 2: Practical advice. Sentence 3: Perspective shift.
-    3. Word Count: Strictly between 50 and 70 words. Punchy.
-    4. Output: Return ONLY the horoscope text. No greetings.
-    5. Introduce absolute variety. Avoid using common astrological clichés like "The stars align," "Cosmic shift," or repeating sentence structures from yesterday. Make every generation unique.
-    """
-    
-    gemini_payload = {
-        "contents": [{"parts": [{"text": prompt}]}]
+    payload = {
+        "model": "llama3-8b-8192",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7
     }
-    
-    for attempt in range(3):
-        try:
-            # Direct API request completely independent of Google's deprecated SDKs
-            gemini_url = f"https://googleapis.com{gemini_key}"
-            gemini_res = requests.post(gemini_url, json=gemini_payload, headers={"Content-Type": "application/json"})
-            
-            if gemini_res.status_code == 200:
-                text = gemini_res.json()['candidates']['content']['parts']['text'].strip()
-                
-                payload = {
-                    "zodiac_sign": sign,
-                    "mood": mood,
-                    "horoscope_text": text
-                }
-                
-                # Post data directly into Supabase REST endpoint
-                post_res = requests.post(f"{url}/daily_horoscopes", json=payload, headers=supabase_headers)
-                
-                if post_res.status_code == 201 or post_res.status_code == 200 or post_res.status_code == 204:
-                    print(f"   ✅ Saved successfully: {sign} ({mood})")
-                    break
-                else:
-                    print(f"   ⚠️ Database rejected row with status {post_res.status_code}: {post_res.text}")
-                    break
-            elif gemini_res.status_code == 429:
-                print(f"   ⚠️ Google Rate limit hit. Cooling down. Retrying attempt {attempt + 1} in 35 seconds...")
-                time.sleep(35)
-            else:
-                print(f"   ❌ Gemini API Error {gemini_res.status_code}: {gemini_res.text}")
-                break
-                
-        except Exception as e:
-            print(f"   ❌ Network processing exception: {e}")
-            break
-            
-    time.sleep(13)
 
-print("All 180 horoscopes successfully synced to the cloud database!")
+    req = urllib.request.Request(
+        GROQ_API_URL, 
+        data=json.dumps(payload).encode('utf-8'), 
+        headers={'Content-Type': 'application/json', 'Authorization': f"Bearer {API_KEY}"}
+    )
+    
+    try:
+        with urllib.request.urlopen(req) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            return res_data["choices"]["message"]["content"].strip()
+    except Exception as e:
+        print(f"Error {sign}-{mood}: {e}")
+        return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
+
+def main():
+    master_database = {}
+    total = len(SIGNS) * len(MOODS)
+    count = 0
+    
+    print(f"Starting generation for {total} items...")
+    for sign in SIGNS:
+        master_database[sign] = {}
+        for mood in MOODS:
+            count += 1
+            print(f"[{count}/{total}] Processing {sign} - {mood}")
+            master_database[sign][mood] = generate_horoscope(sign, mood)
+            time.sleep(2) # Keeps us safely within Groq's free tier limits
+            
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(master_database, f, indent=4, ensure_ascii=False)
+    print("Done!")
+
+if __name__ == "__main__":
+    main()
