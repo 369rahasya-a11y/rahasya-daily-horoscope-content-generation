@@ -50,7 +50,6 @@ for sign, mood in itertools.product(signs, moods):
     5. Introduce absolute variety. Avoid using common astrological clichés like "The stars align," "Cosmic shift," or repeating sentence structures from yesterday. Make every generation unique.
     """
     
-    # Raw JSON packet structure for Gemini 2.5 API
     gemini_payload = {
         "contents": [{"parts": [{"text": prompt}]}]
     }
@@ -62,10 +61,8 @@ for sign, mood in itertools.product(signs, moods):
             gemini_res = requests.post(gemini_url, json=gemini_payload, headers={"Content-Type": "application/json"})
             
             if gemini_res.status_code == 200:
-                # Parse out raw generated text smoothly from response tree
-                text = gemini_res.json()['candidates'][0]['content']['parts'][0]['text'].strip()
+                text = gemini_res.json()['candidates']['content']['parts']['text'].strip()
                 
-                # Direct data dictionary deployment
                 payload = {
                     "zodiac_sign": sign,
                     "mood": mood,
@@ -75,7 +72,7 @@ for sign, mood in itertools.product(signs, moods):
                 # Post data directly into Supabase REST endpoint
                 post_res = requests.post(f"{url}/daily_horoscopes", json=payload, headers=supabase_headers)
                 
-                if post_res.status_code in [200, 201, 204]:
+                if post_res.status_code == 201 or post_res.status_code == 200 or post_res.status_code == 204:
                     print(f"   ✅ Saved successfully: {sign} ({mood})")
                     break
                 else:
@@ -92,7 +89,6 @@ for sign, mood in itertools.product(signs, moods):
             print(f"   ❌ Network processing exception: {e}")
             break
             
-    # 13-second interval check to respect Google's free global tier limitations
     time.sleep(13)
 
 print("All 180 horoscopes successfully synced to the cloud database!")
