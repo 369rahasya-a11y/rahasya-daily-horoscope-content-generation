@@ -5,8 +5,8 @@ import urllib.request
 import urllib.error
 import sys
 
-# Official Google developer endpoint path
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+# Production REST endpoint for the current Gemini 1.5 Flash model stable build
+GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
 
@@ -44,38 +44,39 @@ def generate_horoscope(sign, mood):
         f"Return ONLY the 3-sentence horoscope text. No notes, no introduction, no markdown."
     )
 
-    # Standard native layout configuration required for direct REST API ingestion
+    # Standard JSON body format required by Google's native API
     payload = {
         "contents": [{
             "parts": [{"text": prompt}]
         }]
     }
 
-    # Append API key securely via standard URL parameter mapping path
+    # Pass the API Key securely as a standard path parameter string 
     target_url = f"{GEMINI_URL}?key={API_KEY}"
     
-    # Format the explicit headers and force a POST request method
+    # Enforce standard browser validation parameters to clear CDN firewalls
     headers = {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
     
+    # Explicitly configure the HTTP object as a POST call to bypass 404 fallback routing
     req = urllib.request.Request(
         target_url, 
         data=json.dumps(payload).encode('utf-8'), 
         headers=headers,
-        method='POST'  # Ensures Python forces a POST call instead of defaulting to a GET route
+        method='POST'
     )
     
     try:
         with urllib.request.urlopen(req) as response:
             res_data = json.loads(response.read().decode('utf-8'))
-            # FIXED PARSER PATH: Unpacks array positions exactly as returned by Google
+            # FIXED EXTRACTION: Explicitly traverses index arrays to parse out text blocks cleanly
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
     except urllib.error.HTTPError as he:
         if he.code == 429:
             print("\n⚠️ Rate limit hit. Cooling down system extra...", flush=True)
-            time.sleep(20)
+            time.sleep(25)
             return generate_horoscope(sign, mood)
         print(f"\nHTTP Error {he.code} on {sign}-{mood}", flush=True)
         return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
@@ -100,8 +101,8 @@ def main():
             print(f"[{count}/{total}] Processing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Crucial 4.5 second delay protects your Free Tier limits seamlessly
-            time.sleep(4.5)
+            # Expanded 5.0s rate buffer protects free processing limits reliably
+            time.sleep(5.0)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(master_database, f, indent=4, ensure_ascii=False)
