@@ -2,22 +2,17 @@ import os
 import time
 import itertools
 import requests
-import google.generativeai as genai
 
 # Raw environment variables
 url = os.environ["SUPABASE_URL"]
 key = os.environ["SUPABASE_KEY"]
 gemini_key = os.environ["GEMINI_API_KEY"]
 
-# Configure the Google library interface to use the standard model standard
-genai.configure(api_key=gemini_key)
-model = genai.GenerativeModel('gemini-2.5-flash')
-
 signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 moods = ["Ambitious", "Adventurous", "Creative", "Rebellious", "Confident", "Anxious", "Sad", "Lonely", "Romantic", "Nostalgic", "Exhausted", "Lazy", "Peaceful", "Daydreamy", "Irritated"]
 
-# Direct API Headers for standard database keys
-headers = {
+# Direct API Headers for Supabase REST endpoints
+supabase_headers = {
     "apikey": key,
     "Authorization": f"Bearer {key}",
     "Content-Type": "application/json",
@@ -26,12 +21,11 @@ headers = {
 
 print("Clearing yesterday's forecast...")
 try:
-    # Direct delete API call via requests mapping the targeted path
-    delete_url = f"{url}/daily_horoscopes?zodiac_sign=not.eq."
-    res = requests.delete(delete_url, headers=headers)
+    # Direct delete API call to clear out old table rows safely
+    res = requests.delete(f"{url}/daily_horoscopes?zodiac_sign=not.eq.", headers=supabase_headers)
     print(f"Database reset status code: {res.status_code}")
 except Exception as e:
-    print(f"Notice: Handled clear entry routine safely: {e}")
+    print(f"Notice: Clear operation log: {e}")
 
 print("Starting cosmic generations...")
 for sign, mood in itertools.product(signs, moods):
@@ -56,37 +50,49 @@ for sign, mood in itertools.product(signs, moods):
     5. Introduce absolute variety. Avoid using common astrological clichés like "The stars align," "Cosmic shift," or repeating sentence structures from yesterday. Make every generation unique.
     """
     
+    # Raw JSON packet structure for Gemini 2.5 API
+    gemini_payload = {
+        "contents": [{"parts": [{"text": prompt}]}]
+    }
+    
     for attempt in range(3):
         try:
-            response = model.generate_content(prompt)
-            text = response.text.strip()
+            # Direct API request completely independent of Google's deprecated SDKs
+            gemini_url = f"https://googleapis.com{gemini_key}"
+            gemini_res = requests.post(gemini_url, json=gemini_payload, headers={"Content-Type": "application/json"})
             
-            # Direct upsert data payload dictionary
-            payload = {
-                "zodiac_sign": sign,
-                "mood": mood,
-                "horoscope_text": text
-            }
-            
-            # Post directly to the rest database endpoint mapping options
-            insert_url = f"{url}/daily_horoscopes"
-            post_res = requests.post(insert_url, json=payload, headers=headers)
-            
-            if post_res.status_code == 201 or post_res.status_code == 200 or post_res.status_code == 204:
-                print(f"   ✅ Saved successfully: {sign} ({mood})")
-                break
-            else:
-                print(f"   ⚠️ Database rejected payload with status {post_res.status_code}: {post_res.text}")
-            
-        except Exception as e:
-            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                print(f"   ⚠️ Rate limit hit. Cooling down. Retrying attempt {attempt + 1} in 35 seconds...")
+            if gemini_res.status_code == 200:
+                # Parse out raw generated text smoothly from response tree
+                text = gemini_res.json()['candidates'][0]['content']['parts'][0]['text'].strip()
+                
+                # Direct data dictionary deployment
+                payload = {
+                    "zodiac_sign": sign,
+                    "mood": mood,
+                    "horoscope_text": text
+                }
+                
+                # Post data directly into Supabase REST endpoint
+                post_res = requests.post(f"{url}/daily_horoscopes", json=payload, headers=supabase_headers)
+                
+                if post_res.status_code in [200, 201, 204]:
+                    print(f"   ✅ Saved successfully: {sign} ({mood})")
+                    break
+                else:
+                    print(f"   ⚠️ Database rejected row with status {post_res.status_code}: {post_res.text}")
+                    break
+            elif gemini_res.status_code == 429:
+                print(f"   ⚠️ Google Rate limit hit. Cooling down. Retrying attempt {attempt + 1} in 35 seconds...")
                 time.sleep(35)
             else:
-                print(f"   ❌ Error generating for {sign}-{mood}: {e}")
+                print(f"   ❌ Gemini API Error {gemini_res.status_code}: {gemini_res.text}")
                 break
-    
-    # 13-second pace buffer to maintain complete free-tier compliance
+                
+        except Exception as e:
+            print(f"   ❌ Network processing exception: {e}")
+            break
+            
+    # 13-second interval check to respect Google's free global tier limitations
     time.sleep(13)
 
 print("All 180 horoscopes successfully synced to the cloud database!")
