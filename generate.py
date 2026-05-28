@@ -53,7 +53,7 @@ for sign, mood in itertools.product(signs, moods):
     except Exception as e:
         print(f"Error generating for {sign}-{mood}: {e}")
     
-    # Crucial step: Wait 5 seconds to stay safely within free tier API rate limits
+    # Crucial step: Wait 5 seconds to stay safely within free tier API rate limits (15 requests per minute max)
     time.sleep(5)
 
 print("All 180 horoscopes successfully synced to the cloud database!")
