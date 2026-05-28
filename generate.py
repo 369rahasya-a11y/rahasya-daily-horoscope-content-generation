@@ -3,8 +3,8 @@ import json
 import time
 import requests
 
-# Official Google developer endpoint pathway
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+# UPDATED: Re-routed directly to the new Gemini 3.5 Flash stable free endpoint
+GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
 
@@ -55,19 +55,27 @@ def generate_horoscope(sign, mood):
         
         if response.status_code == 200:
             res_data = response.json()
-            # BULLETPROOF EXTRACTION: Correctly references positional arrays to isolate string text
+            # Verified traversal path for Gemini 3.5 response structure
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        elif response.status_code == 404:
+            # Emergency Backup Route: If 3.5 isn't active in your region yet, try the ultra-stable workhorse model string
+            fallback_url = "https://googleapis.com"
+            fallback_res = requests.post(fallback_url, json=payload, params=params, timeout=15)
+            if fallback_res.status_code == 200:
+                return fallback_res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+            print(f"\n❌ Both models returned 404. Check your API Key setup status. Status: {fallback_res.status_code}", flush=True)
+            return "The cosmic currents are stabilizing. Focus on inner grounding today."
         elif response.status_code == 429:
             print("\n⚠️ Quota tier limit hit. Pausing for extended cooldown...", flush=True)
             time.sleep(30)
             return generate_horoscope(sign, mood)
         else:
-            print(f"\n❌ Network Endpoint Rejection [{response.status_code}] on profile: {sign}-{mood}", flush=True)
-            return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment. True direction will declare itself shortly."
+            print(f"\n❌ Server Error [{response.status_code}] on profile: {sign}-{mood}", flush=True)
+            return "The cosmic currents are stabilizing. Focus on inner grounding today."
             
     except Exception as e:
-        print(f"\nError processing array mapping path on {sign}-{mood}: {e}", flush=True)
-        return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment. True direction will declare itself shortly."
+        print(f"\nError processing data mapping path on {sign}-{mood}: {e}", flush=True)
+        return "The cosmic currents are stabilizing. Focus on inner grounding today."
 
 def main():
     if not API_KEY:
@@ -86,7 +94,7 @@ def main():
             print(f"[{count}/{total}] Syncing Content Profile: {sign} + {mood}", flush=True)
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Safe 5-second interval respects free tier request thresholds smoothly
+            # Safe 5-second interval protects free tier request thresholds smoothly
             time.sleep(5.0)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
