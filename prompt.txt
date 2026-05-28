@@ -1,1 +1,165 @@
+Generate emotionally intelligent daily horoscope content for ALL zodiac signs and ALL moods for today.
 
+━━━━━━━━━━━━━━━━━━
+ZODIAC SIGNS
+━━━━━━━━━━━━━━━━━━
+
+Aries
+Taurus
+Gemini
+Cancer
+Leo
+Virgo
+Libra
+Scorpio
+Sagittarius
+Capricorn
+Aquarius
+Pisces
+
+━━━━━━━━━━━━━━━━━━
+MOODS
+━━━━━━━━━━━━━━━━━━
+
+Ambitious
+Adventurous
+Creative
+Rebellious
+Confident
+Anxious
+Sad
+Lonely
+Romantic
+Nostalgic
+Exhausted
+Lazy
+Peaceful
+Daydreamy
+Irritated
+
+━━━━━━━━━━━━━━━━━━
+TASK
+━━━━━━━━━━━━━━━━━━
+
+Generate one unique daily horoscope for every possible combination of:
+
+* zodiac sign
+* mood
+
+Total required outputs:
+12 signs × 15 moods = 180 horoscopes
+
+━━━━━━━━━━━━━━━━━━
+TONE SYSTEM
+━━━━━━━━━━━━━━━━━━
+
+If Mood is:
+
+* Ambitious
+* Adventurous
+* Creative
+* Rebellious
+* Confident
+
+Use “Fierce & Direct” energy.
+The tone should feel motivating, magnetic, energetic, bold, action-oriented, and confident.
+
+If Mood is:
+
+* Anxious
+* Sad
+* Lonely
+* Romantic
+* Nostalgic
+
+Use “Nurturing & Deeply Empathetic” energy.
+The tone should feel emotionally safe, warm, validating, intimate, understanding, and emotionally intelligent.
+
+If Mood is:
+
+* Exhausted
+* Lazy
+* Peaceful
+* Daydreamy
+* Irritated
+
+Use “Grounding & Calm” energy.
+The tone should feel spacious, calming, slow, reflective, emotionally balanced, and gently reassuring.
+
+━━━━━━━━━━━━━━━━━━
+STRICT WRITING RULES
+━━━━━━━━━━━━━━━━━━
+
+1. NEVER directly mention the mood word itself.
+
+Bad:
+
+* “You are anxious today.”
+* “Your loneliness is strong.”
+
+Instead:
+
+* indirectly mirror emotional atmosphere, thoughts, emotional tension, desires, or energy.
+
+2. Every horoscope MUST contain EXACTLY:
+
+* Sentence 1 → emotional/cosmic atmosphere
+* Sentence 2 → practical advice or mental shift
+* Sentence 3 → emotional realization, perspective shift, or prediction
+
+3. Every horoscope must be:
+
+* between 50 and 70 words
+* emotionally specific
+* modern sounding
+* conversational
+* slightly mystical but believable
+* non-repetitive
+
+4. Avoid:
+
+* generic spirituality
+* repetitive phrases
+* overly poetic language
+* dramatic prophecy language
+* zodiac stereotypes
+* mentioning planets excessively
+
+5. Every horoscope should feel:
+
+* screenshot-worthy
+* emotionally personal
+* highly relatable
+* socially shareable
+
+━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━
+
+Return ONLY valid JSON.
+
+Structure:
+
+{
+"date": "YYYY-MM-DD",
+"horoscopes": [
+{
+"sign": "Aries",
+"mood": "Ambitious",
+"content": "horoscope text here"
+}
+]
+}
+
+━━━━━━━━━━━━━━━━━━
+CRITICAL REQUIREMENTS
+━━━━━━━━━━━━━━━━━━
+
+* Generate ALL 180 horoscope combinations.
+* Every horoscope MUST be unique.
+* No duplicate phrasing.
+* No markdown.
+* No explanations.
+* No commentary.
+* Output ONLY valid JSON.
+Return ONLY valid JSON.
