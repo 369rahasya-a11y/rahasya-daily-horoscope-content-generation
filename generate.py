@@ -140,6 +140,6 @@ Return ONLY valid JSON.
         print("ERROR:")
         print(str(e))
 
-    time.sleep(5)
+    time.sleep(35)
 
 print("\nALL DONE")
