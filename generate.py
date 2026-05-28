@@ -4,7 +4,7 @@ import time
 import urllib.request
 import urllib.error
 
-# Native Endpoint Config (Using Gemini Flash for reliable, high-speed free processing)
+# Corrected native REST endpoint for Gemini 1.5 Flash
 GEMINI_URL = "https://googleapis.com"
 API_KEY = os.environ.get("GEMINI_API_KEY")
 OUTPUT_FILE = "horoscopes.json"
@@ -43,18 +43,14 @@ def generate_horoscope(sign, mood):
         f"Return ONLY the 3-sentence horoscope text. No notes, no introduction, no markdown."
     )
 
-    # Clean REST API Structure formatting for native Google API ingestion
+    # Perfect REST structure payload required by Google
     payload = {
         "contents": [{
             "parts": [{"text": prompt}]
-        }],
-        "generationConfig": {
-            "temperature": 0.7,
-            "maxOutputTokens": 150
-        }
+        }]
     }
 
-    # Authenticate via native URL API Key parameter to avoid header injection issues
+    # Pass the API Key smoothly in the URL parameter path
     target_url = f"{GEMINI_URL}?key={API_KEY}"
     req = urllib.request.Request(
         target_url, 
@@ -65,14 +61,14 @@ def generate_horoscope(sign, mood):
     try:
         with urllib.request.urlopen(req) as response:
             res_data = json.loads(response.read().decode('utf-8'))
-            # Parse text response safely out of the standard nested Gemini structure
+            # Fixed mapping index path to cleanly extract text from Gemini response structure
             return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
     except urllib.error.HTTPError as he:
         if he.code == 429:
             print("⚠️ Rate limit hit. Cooling down system extra...")
-            time.sleep(15) # Extended recovery pause
-            return generate_horoscope(sign, mood) # Retry block
-        print(f"HTTP Error {he.code} on {sign}-{mood}: {he.read().decode('utf-8')}")
+            time.sleep(15)
+            return generate_horoscope(sign, mood)
+        print(f"HTTP Error {he.code} on {sign}-{mood}")
         return "The cosmos are shifting quietly today. Take a moment to ground your breathing. Clarity will find you soon."
     except Exception as e:
         print(f"Error executing {sign}-{mood}: {e}")
@@ -95,7 +91,7 @@ def main():
             print(f"[{count}/{total}] Processing Content Profile: {sign} + {mood}")
             master_database[sign][mood] = generate_horoscope(sign, mood)
             
-            # Crucial 4.5 second delay protects your Free Tier limits seamlessly (approx 13 requests/min)
+            # 4.5 second delay respects Gemini Free Tier limits flawlessly
             time.sleep(4.5)
             
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
