@@ -1,4 +1,3 @@
-````python
 import json
 import os
 import time
@@ -186,4 +185,3 @@ RULES:
     time.sleep(8)
 
 print("\nALL 180 HOROSCOPES GENERATED")
-````
