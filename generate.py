@@ -22,7 +22,7 @@ response = requests.post(
         "Content-Type": "application/json"
     },
     json={
-        "model": "qwen/qwen3-32b:free",
+        "model": "mistralai/mistral-7b-instruct:free",
         "messages": [
             {
                 "role": "user",
