@@ -1,97 +1,49 @@
-import os
 import json
-import time
-import requests
+import os
+from datetime import datetime
 
-# Production canonical route for the current Gemini 1.5 Flash model stable build
-GEMINI_URL = "https://googleapis.com"
-API_KEY = os.environ.get("GEMINI_API_KEY")
-OUTPUT_FILE = "horoscopes.json"
+import google.generativeai as genai
+from supabase import create_client
 
-SIGNS = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo", 
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"
-]
+# ENV VARIABLES
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-MOODS = [
-    "ambitious", "adventurous", "creative", "rebellious", "confident",
-    "anxious", "sad", "lonely", "romantic", "nostalgic",
-    "exhausted", "lazy", "peaceful", "daydreamy", "irritated"
-]
+# CONFIGURE GEMINI
+genai.configure(api_key=GEMINI_API_KEY)
 
-def get_tone_rules(mood):
-    if mood in ["ambitious", "adventurous", "creative", "rebellious", "confident"]:
-        return "Use 'fierce & direct' energy. The tone must feel motivating, magnetic, energetic, bold, action-oriented, and confident."
-    elif mood in ["anxious", "sad", "lonely", "romantic", "nostalgic"]:
-        return "Use 'nurturing & deeply empathetic' energy. The tone must feel emotionally safe, warm, validating, intimate, understanding, and emotionally intelligent."
-    else:
-        return "Use 'grounding & calm' energy. The tone must feel spacious, calming, slow, reflective, emotionally balanced, and gently reassuring."
+model = genai.GenerativeModel("gemini-2.0-flash")
 
-def generate_horoscope(sign, mood):
-    tone_instructions = get_tone_rules(mood)
-    prompt = (
-        f"Write a modern daily horoscope for the zodiac sign '{sign}'. "
-        f"The emotional atmosphere must mirror the feeling of being '{mood}', "
-        f"BUT YOU MUST NEVER DIRECTLY MENTION THE WORD '{mood}' OR ANY DIRECT SYNONYMS. "
-        f"{tone_instructions}\n\n"
-        f"STRICT WRITING RULES:\n"
-        f"1. Must be between 50 and 70 words total.\n"
-        f"2. Sentence 1: emotional/cosmic atmosphere.\n"
-        f"3. Sentence 2: practical advice or mental shift.\n"
-        f"4. Sentence 3: emotional realization or perspective shift.\n"
-        f"Return ONLY the 3-sentence horoscope text. No notes, no introduction, no markdown."
-    )
+# LOAD PROMPT
+with open("prompt.txt", "r", encoding="utf-8") as f:
+    prompt = f.read()
 
-    payload = {
-        "contents": [{
-            "parts": [{"text": prompt}]
-        }]
-    }
+# GENERATE CONTENT
+response = model.generate_content(prompt)
 
-    params = {"key": API_KEY}
-    
-    try:
-        response = requests.post(GEMINI_URL, json=payload, params=params, timeout=15)
-        
-        if response.status_code == 200:
-            res_data = response.json()
-            # BULLETPROOF EXTRACTION: Correctly processes positional arrays [0] to extract the text strings
-            return res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
-        elif response.status_code == 429:
-            print("\n⚠️ Quota tier limit hit. Pausing for extended cooldown...", flush=True)
-            time.sleep(30)
-            return generate_horoscope(sign, mood)
-        else:
-            print(f"\n❌ Server Rejection status [{response.status_code}] on profile: {sign}-{mood}", flush=True)
-            return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment."
-            
-    except Exception as e:
-        print(f"\nError processing array mapping path on {sign}-{mood}: {e}", flush=True)
-        return "The cosmic tides are settling into a neutral pattern today. Focus on stabilizing your baseline environment."
+text = response.text.strip()
 
-def main():
-    if not API_KEY:
-        print("❌ CRITICAL SETUP ERROR: GEMINI_API_KEY environment variable is entirely missing from repository secrets!", flush=True)
-        return
+# CLEAN JSON
+if text.startswith("```json"):
+    text = text.replace("```json", "").replace("```", "")
 
-    master_database = {}
-    total = len(SIGNS) * len(MOODS)
-    count = 0
-    
-    print(f"Starting Gemini Cloud content generation pipeline for {total} profiles...", flush=True)
-    for sign in SIGNS:
-        master_database[sign] = {}
-        for mood in MOODS:
-            count += 1
-            print(f"[{count}/{total}] Syncing Content Profile: {sign} + {mood}", flush=True)
-            master_database[sign][mood] = generate_horoscope(sign, mood)
-            
-            # Safe 5-second interval respects free tier request thresholds smoothly
-            time.sleep(5.0)
-            
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(master_database, f, indent=4, ensure_ascii=False)
-    print("✨ Rahasya automated content system sync operation successfully completed!", flush=True)
+# PARSE JSON
+parsed = json.loads(text)
 
-if __name__ == "__main__":
-    main()
+# CONNECT SUPABASE
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
+
+# INSERT INTO DATABASE
+for item in parsed["horoscopes"]:
+    supabase.table("horoscopes").upsert({
+        "horoscope_date": parsed["date"],
+        "sign": item["sign"],
+        "mood": item["mood"],
+        "content": item["content"]
+    }).execute()
+
+print("All horoscopes uploaded successfully.")
