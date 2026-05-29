@@ -124,6 +124,8 @@ Generate horoscopes ONLY for:
 {sign}
 
 Sign personality:
+{SIGN_TRAITS[sign]}
+
 Generate ALL these moods:
 {moods_text}
 
