@@ -280,4 +280,18 @@ OUTPUT RULES
 * No markdown
 * No explanations
 
-Return ONLY valid JSON.
+CRITICAL:
+
+Return STRICT VALID JSON.
+
+The response will be parsed using Python json.loads().
+
+If the JSON is invalid, the request fails.
+
+Do not include:
+- comments
+- markdown
+- explanations
+- trailing commas
+- extra text before JSON
+- extra text after JSON
