@@ -132,7 +132,7 @@ CRITICAL:
                     model="llama-3.3-70b-versatile",
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.9,
-                    max_tokens=40000
+                    max_tokens=50000
                 )
 
                 break
