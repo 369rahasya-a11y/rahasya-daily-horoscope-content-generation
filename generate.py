@@ -123,6 +123,7 @@ IMPORTANT:
 Generate horoscopes ONLY for:
 {sign}
 
+Sign personality:
 Generate ALL these moods:
 {moods_text}
 
@@ -217,24 +218,25 @@ CRITICAL:
 
             parsed = json.loads(text)
 
-            required_moods = set(MOODS)
-returned_moods = {item["mood"] for item in parsed["horoscopes"]}
+        required_moods = set(MOODS)
+        returned_moods = {item["mood"] for item in parsed["horoscopes"]}
 
-if required_moods != returned_moods:
+    if required_moods != returned_moods:
 
-    print(f"MISSING OR DUPLICATE MOODS FOR {sign}")
+        print(f"MISSING OR DUPLICATE MOODS FOR {sign}")
 
-    failed_signs.append(sign)
+        failed_signs.append(sign)
 
-    continue
+        continue
 
-if len(parsed["horoscopes"]) != 15:
+    if len(parsed["horoscopes"]) != 15:
 
-    print(f"INVALID MOOD COUNT FOR {sign}")
+        print(f"INVALID MOOD COUNT FOR {sign}")
 
-    failed_signs.append(sign)
+        failed_signs.append(sign)
 
-    continue
+        continue
+
 
         except json.JSONDecodeError as e:
 
