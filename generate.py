@@ -1,7 +1,7 @@
 import os
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from groq import Groq
 from supabase import create_client
@@ -57,7 +57,9 @@ SIGN_TRAITS = {
 with open("prompt.txt", "r", encoding="utf-8") as f:
     MASTER_PROMPT = f.read()
 
-today = datetime.utcnow().date().isoformat()
+target_date = (
+    datetime.utcnow().date() + timedelta(days=1)
+).isoformat()
 
 failed_signs = []
 successful_signs = []
@@ -188,7 +190,7 @@ RULES:
 
             supabase.table("horoscopes").upsert(
                 {
-                    "horoscope_date": today,
+                    "horoscope_date": target_date,
                     "sign": sign,
                     "mood": item["mood"],
                     "content": item["content"]
