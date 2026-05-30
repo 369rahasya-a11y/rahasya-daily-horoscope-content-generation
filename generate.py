@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import random
 from datetime import datetime, timedelta
 
 from groq import Groq
@@ -8,7 +9,7 @@ from supabase import create_client
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 if not GROQ_API_KEY:
     raise Exception("GROQ_API_KEY missing")
@@ -16,14 +17,14 @@ if not GROQ_API_KEY:
 if not SUPABASE_URL:
     raise Exception("SUPABASE_URL missing")
 
-if not SUPABASE_KEY:
+if not SUPABASE_SERVICE_ROLE_KEY:
     raise Exception("SUPABASE_SERVICE_ROLE_KEY missing")
 
 client = Groq(api_key=GROQ_API_KEY)
 
 supabase = create_client(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_SERVICE_ROLE_KEY
 )
 
 print("CONNECTED")
@@ -54,6 +55,52 @@ SIGN_TRAITS = {
     "Pisces": "imaginative, empathetic, dreamy, emotionally porous"
 }
 
+THEMES = [
+    "wanting recognition","fear of being misunderstood","avoiding a conversation",
+    "changing priorities","outgrowing people","trusting intuition",
+    "letting go","uncertainty","comparison","starting over",
+    "protecting independence","learning patience","feeling overlooked",
+    "unexpected clarity","quiet confidence","emotional distance"
+]
+
+CONTEXTS = [
+    "friendship","family","work","romantic connection",
+    "personal goals","social circle","future plans",
+    "self-image","creative project","daily routine"
+]
+
+BEHAVIORS = [
+    "checking a conversation twice","typing and deleting a message",
+    "staring at a notification","avoiding a call",
+    "replaying a conversation","changing plans at the last minute",
+    "opening a message and not replying","scrolling instead of starting a task",
+    "saving something to revisit later","pretending not to care",
+    "refreshing an app without thinking","rewriting a response multiple times",
+    "hesitating before pressing send","keeping something to yourself",
+    "lingering on someone's profile"
+]
+
+STRUCTURES = [
+    "conversation","observation","realization",
+    "internal conflict","decision","unexpected moment",
+    "social interaction","memory resurfacing"
+]
+
+CONTRADICTIONS = [
+    "wanting reassurance but refusing to ask",
+    "missing someone but not wanting them back",
+    "wanting attention while avoiding visibility",
+    "wanting change while resisting it",
+    "craving connection while protecting distance",
+    "wanting clarity while avoiding the conversation that would provide it"
+]
+
+SITUATIONS = [
+    "a delayed reply","an unexpected message","a canceled plan",
+    "a work conversation","a chance encounter","a social gathering",
+    "an unfinished conversation","a difficult decision"
+]
+
 with open("prompt.txt", "r", encoding="utf-8") as f:
     MASTER_PROMPT = f.read()
 
@@ -68,6 +115,13 @@ total_uploaded = 0
 for sign in SIGNS:
 
     print(f"\\n========== {sign} ==========\\n")
+
+    themes = random.sample(THEMES, 4)
+    contexts = random.sample(CONTEXTS, 3)
+    behaviors = random.sample(BEHAVIORS, 6)
+    structures = random.sample(STRUCTURES, 3)
+    contradictions = random.sample(CONTRADICTIONS, 3)
+    situations = random.sample(SITUATIONS, 3)
 
     mood_format = "\\n\\n".join(
         [f"===MOOD: {m}===\\nWrite horoscope here" for m in MOODS]
@@ -84,6 +138,30 @@ Generate horoscopes ONLY for:
 Sign personality:
 {SIGN_TRAITS[sign]}
 
+VARIETY TOOLBOX
+
+Use these naturally across the 15 moods.
+Do NOT force all of them into every mood.
+Distribute them across the readings.
+
+Themes:
+{chr(10).join("- " + x for x in themes)}
+
+Contexts:
+{chr(10).join("- " + x for x in contexts)}
+
+Behaviors:
+{chr(10).join("- " + x for x in behaviors)}
+
+Narrative Structures:
+{chr(10).join("- " + x for x in structures)}
+
+Emotional Contradictions:
+{chr(10).join("- " + x for x in contradictions)}
+
+Situations:
+{chr(10).join("- " + x for x in situations)}
+
 Generate ALL these moods:
 {", ".join(MOODS)}
 
@@ -92,6 +170,10 @@ OUTPUT FORMAT EXACTLY:
 {mood_format}
 
 RULES:
+
+- Spread the provided themes, behaviors, situations and contexts across different moods
+- Do not repeat the same emotional situation across all moods
+- Make each mood feel distinct
 - Generate all 15 moods exactly once
 - Keep each mood header EXACTLY as written
 - No JSON
@@ -117,7 +199,7 @@ RULES:
                 completion = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=0.8,
+                    temperature=0.9,
                     max_tokens=5000
                 )
 
@@ -228,7 +310,7 @@ if total_uploaded != 180:
     )
 
 if failed_signs:
-    print("\nFAILED SIGNS:")
+    print("\\nFAILED SIGNS:")
     print(sorted(list(set(failed_signs))))
 else:
-    print("\nALL SIGNS GENERATED SUCCESSFULLY")
+    print("\\nALL SIGNS GENERATED SUCCESSFULLY")
