@@ -78,6 +78,130 @@ Exhausted, Lazy, Peaceful, Daydreamy, Irritated:
 * spacious
 * emotionally balanced
 
+SIGN DIFFERENTIATION
+
+The zodiac sign must strongly influence:
+
+* emotional conflict
+* behavior
+* thought patterns
+* relationship dynamics
+* self-awareness
+* emotional blind spots
+
+Aries:
+
+* impulsive
+* competitive
+* action-oriented
+* impatient with stagnation
+
+Taurus:
+
+* comfort-seeking
+* security-focused
+* resistant to sudden change
+* values stability
+
+Gemini:
+
+* mentally restless
+* curious
+* conversational
+* conflicted by multiple possibilities
+
+Cancer:
+
+* emotionally protective
+* sentimental
+* attachment-focused
+* deeply affected by emotional atmosphere
+
+Leo:
+
+* pride
+* visibility
+* recognition
+* self-expression
+
+Virgo:
+
+* analytical
+* observant
+* self-critical
+* improvement-oriented
+
+Libra:
+
+* relationship-focused
+* harmony-seeking
+* socially aware
+* indecisive
+
+Scorpio:
+
+* emotionally intense
+* private
+* protective of vulnerability
+* control-oriented
+
+Sagittarius:
+
+* freedom-seeking
+* adventurous
+* truth-driven
+* resistant to restriction
+
+Capricorn:
+
+* responsible
+* disciplined
+* achievement-focused
+* emotionally restrained
+
+Aquarius:
+
+* independent
+* unconventional
+* intellectually driven
+* emotionally detached at times
+
+Pisces:
+
+* imaginative
+* emotionally absorbent
+* intuitive
+* prone to escapism
+
+The sign should be clearly recognizable from the emotional situation alone.
+
+EMOTIONAL VARIETY
+
+Draw inspiration from a wide range of human experiences:
+
+* workplace dynamics
+* friendships
+* family relationships
+* dating uncertainty
+* long-term relationships
+* creative frustration
+* financial stress
+* decision fatigue
+* social awkwardness
+* burnout
+* loneliness in company
+* nostalgia triggered by ordinary moments
+* self-image
+* ambition
+* routine
+* independence
+* guilt
+* avoidance
+* personal boundaries
+* identity shifts
+
+Do not repeatedly use romantic uncertainty as the primary emotional engine.
+
 UNIQUENESS RULE
 
 Each horoscope must contain at least one:
@@ -90,11 +214,40 @@ Each horoscope must contain at least one:
 
 Avoid writing that could apply equally to everyone.
 
+SCENE REQUIREMENT
+
+Every horoscope must include at least one concrete real-life moment.
+
+Examples:
+
+* rereading a message before sending it
+* staring at an unfinished task
+* sitting in silence after a conversation
+* opening an app and forgetting why
+* hearing someone's name unexpectedly
+* deleting a paragraph and starting over
+* pretending to be busy
+* delaying a reply on purpose
+* checking a calendar repeatedly
+* changing your mind halfway through a decision
+* overhearing something that lingers longer than expected
+* cleaning instead of dealing with a difficult emotion
+* leaving a tab open all day without acting on it
+
+Use specific scenes instead of abstract emotions.
+
 SCREENSHOT TEST
 
 At least one sentence should feel worth saving, sharing, or rereading later.
 
 The line should feel emotionally recognizable rather than inspirational.
+
+Examples:
+
+* Some people stop texting because they lose interest. Others stop because they started caring too much.
+* Not every unanswered question needs an answer; some just reveal what you've been afraid to admit.
+* It's strange how quickly peace arrives when you stop waiting for someone to become who they promised they'd be.
+* Sometimes the hardest boundary is accepting that someone can disappoint you without being a bad person.
 
 DIVERSITY RULE
 
@@ -105,8 +258,120 @@ Across the 15 moods:
 * vary relationship dynamics
 * vary internal conflicts
 * vary emotional scenarios
+* vary life situations
+* vary social observations
 
-Do not reuse the same emotional situation repeatedly.
+No two moods should revolve around:
+
+* the same insecurity
+* the same relationship issue
+* the same emotional realization
+* the same conflict
+* the same social interaction
+
+FORBIDDEN RECURRENT PATTERNS
+
+Avoid repeatedly using:
+
+* checking the phone
+* waiting for a message
+* scrolling social media
+* replaying conversations
+* taking a deep breath
+* stepping outside your comfort zone
+* craving connection
+* seeking reassurance
+* fear of failure
+* overthinking the future
+
+These may appear occasionally but must never become recurring emotional templates.
+
+ANTI-TEMPLATE MODE
+
+Do not generate moods by filling emotional templates.
+
+Do not write:
+
+* problem
+* reflection
+* lesson
+
+as a predictable structure.
+
+Do not use interchangeable emotional frameworks.
+
+Every mood should feel like an entirely different emotional observation.
+
+Write as if observing a real person on a specific day rather than generating horoscope content.
+
+NOVELTY REQUIREMENT
+
+Before writing each mood:
+
+* ensure the emotional situation is different from all previous moods
+* ensure the central conflict is different
+* ensure the social interaction is different
+* ensure the realization is different
+* ensure the emotional trigger is different
+
+Treat every mood as a different person having a different day.
+
+ANTI-DATASET MODE
+
+Do not generate content by filling predefined horoscope patterns.
+
+Avoid producing variations of:
+
+* "you're overthinking"
+* "you're waiting"
+* "you're afraid"
+* "you're craving"
+
+unless they arise naturally from a unique situation.
+
+Prioritize originality over symmetry.
+
+If a mood begins sounding similar to a previous mood, abandon the idea and choose a completely different emotional scenario.
+
+The goal is emotional authenticity, not coverage of emotional categories.
+
+GLOBAL UNIQUENESS
+
+Assume all 12 zodiac signs and all 15 moods are generated together as one batch.
+
+Avoid reusing the same emotional situation, social interaction, realization, or behavioral pattern across multiple signs whenever possible.
+
+If multiple signs share a similar emotional theme, express it through:
+
+* different motivations
+* different behaviors
+* different social dynamics
+* different emotional blind spots
+* different forms of self-awareness
+
+Examples:
+
+Aries ambition may come from competition.
+
+Capricorn ambition may come from responsibility.
+
+Leo ambition may come from recognition.
+
+Virgo ambition may come from mastery.
+
+The emotional theme may overlap, but the experience should feel different.
+
+Prioritize emotional authenticity over artificial uniqueness.
+
+Do not invent unusual situations simply to appear original.
+
+Choose emotionally recognizable moments that feel believable and human.
+
+Assume readers may compare multiple signs side by side.
+
+The goal is not perfect uniqueness.
+
+The goal is that each sign feels like a different person living a different day.
 
 RULES
 
@@ -117,46 +382,48 @@ RULES
 * Use emotionally specific behavior instead of vague statements.
 * Make each sign and mood feel distinct.
 * Use unique phrasing every time.
+* Avoid emotional clichés.
+* Avoid horoscope clichés.
+* Avoid generic life advice.
 
 Prefer:
 
-* You keep checking a conversation that already ended.
-* You're waiting for reassurance from someone who doesn't know you're looking for it.
-* Part of you wants to reply immediately while another part wants to disappear for a day.
+* You reread the message three times before deciding it sounded too eager.
+* The task wasn't difficult; starting it felt like admitting it mattered.
+* You laughed during the conversation, then spent the drive home wondering why it still bothered you.
+* Someone asked a simple question and accidentally hit a nerve you thought had healed.
 
 Avoid:
 
 * Things are changing.
 * I sense emotional growth.
 * New opportunities are coming.
+* Trust the universe.
+* Everything happens for a reason.
 
-REPETITION PREVENTION
+QUALITY CHECK BEFORE OUTPUT
 
-Avoid repeatedly starting with:
+Before finalizing each horoscope, verify:
 
-* You're feeling
-* Your mind is
-* You keep
-* Part of you
-* The truth is
-* Remember that
+1. Does this sound specific to the zodiac sign?
+   If not, rewrite.
 
-Vary openings using:
+2. Does this contain a concrete real-life moment?
+   If not, rewrite.
 
-* observations
-* scenes
-* conversations
-* emotional habits
-* quiet realizations
+3. Is there at least one emotionally recognizable line worth saving or sharing?
+   If not, rewrite.
 
-Do not sound like:
+4. Does the emotional conflict feel human rather than generic?
+   If not, rewrite.
 
-* a therapist
-* a life coach
-* a guru
-* a generic horoscope generator
+5. Does this sound like an observation about a real person rather than generated horoscope content?
+   If not, rewrite.
 
-Emotional goal:
+6. If another horoscope in the batch uses a similar theme, does this express it through a different emotional lens?
+   If not, rewrite.
+
+EMOTIONAL GOAL
 
 Emotionally intelligent introspection disguised as astrology.
 
@@ -208,5 +475,8 @@ horoscope content
 horoscope content
 
 Generate all 15 moods exactly once.
+Generate only for the requested zodiac sign.
 Output only the mood sections.
 Do not use JSON.
+Do not explain.
+Do not include introductions or conclusions.
