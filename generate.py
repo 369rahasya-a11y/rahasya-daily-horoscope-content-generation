@@ -574,8 +574,11 @@ for sign in SIGNS:
         print(f"  UPLOAD FAILED: {e}")
         failed_signs.append(sign)
 
-    print(f"  Waiting before next sign... (tokens used: {tokens_used:,})")
-    time.sleep(8)
+    # Sleep 40s between signs to stay within Groq free tier TPM limit (6,000/min)
+    # Each sign uses ~3,740 tokens. At 6,000 TPM we need at least 37s gap.
+    # 40s gives a small buffer on top.
+    print(f"  Waiting 40s before next sign... (tokens used: {tokens_used:,})")
+    time.sleep(40)
 
 # ── SUMMARY ───────────────────────────────────────────────────────────────────
 
