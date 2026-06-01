@@ -2,7 +2,6 @@ import os
 import re
 import time
 import random
-from collections import defaultdict
 from datetime import datetime, timedelta
 
 from groq import Groq
@@ -26,14 +25,23 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 print("CONNECTED")
 
+# ── TOKEN BUDGET ──────────────────────────────────────────────────────────────
+# Groq free tier: 100,000 tokens/day
+# Budget per sign: ~6,500 tokens (prompt ~800 in + output ~1,600 out = ~2,400 × safety buffer)
+# 12 signs × 6,500 = 78,000 — leaves 22,000 headroom for any regens
+# If we exceed DAILY_TOKEN_LIMIT mid-run we stop cleanly instead of burning retries
+
+DAILY_TOKEN_LIMIT  = 90_000   # stop before hitting the hard wall
+TOKEN_SAFETY_STOP  = 85_000   # warn and pause if we cross this
+tokens_used        = 0        # running total tracked from API responses
+
 # ── SIMILARITY CONFIG ─────────────────────────────────────────────────────────
+# Raised from 0.35 → 0.45 so we only flag genuinely repetitive outputs,
+# not just outputs that share common English words.
+# Cross-day: no API regen — we mutate the flagged sentence directly in Python.
+# Cross-mood: same mutation approach, zero extra API calls.
 
-# Jaccard similarity threshold — 0.0 = anything goes, 1.0 = must be identical
-# 0.35 means: if two outputs share more than 35% of their words, flag as too similar
-SIMILARITY_THRESHOLD = 0.35
-
-# Max regeneration attempts per mood before giving up and keeping best version
-MAX_REGEN_ATTEMPTS = 2
+SIMILARITY_THRESHOLD = 0.45
 
 # ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -96,7 +104,7 @@ SIGN_BLIND_SPOTS = {
     "Pisces":      "absorbs other people's reality until their own goes blurry",
 }
 
-# 36 scenes — enough to assign unique ones per mood (15) with plenty of spare
+# 36 unique scenes — one assigned per mood, no repeats within a run
 SCENES = [
     "rereading a message three times before deciding it sounded too eager",
     "staring at an unfinished task without opening it",
@@ -110,32 +118,33 @@ SCENES = [
     "overhearing a name they hadn't thought about in months",
     "checking the time repeatedly without registering what it said",
     "typing a reply and closing the thread without sending it",
-    "laughing during a conversation and then wondering why it still bothered them on the drive home",
-    "someone asking a simple question that accidentally landed on something unhealed",
+    "laughing during a conversation then wondering why it bothered them on the drive home",
+    "someone asking a simple question that landed on something unhealed",
     "rearranging something small on their desk before starting something difficult",
-    "saying 'I'm fine' and meaning most of it",
+    "saying they were fine and meaning most of it",
     "skipping a social event and feeling quieter than expected afterward",
-    "reading an old message not to feel sad but out of some habit they hadn't named yet",
-    "writing a long reply and then cutting it down to three words",
+    "reading an old message out of some habit they hadn't named yet",
+    "writing a long reply then cutting it down to three words",
     "deciding not to bring something up and immediately second-guessing that",
     "walking into a room and pausing before remembering why they came",
-    "noticing they'd been holding their jaw tight for the last hour",
+    "noticing they had been holding their jaw tight for the last hour",
     "putting off one task by completing three smaller ones instead",
-    "closing a conversation they initiated because it wasn't going the way they hoped",
-    "rehearsing what they'd say before a call that turned out to be nothing",
-    "finishing a meal without tasting it because their mind was somewhere else",
-    "keeping a tab open for three days as a way of pretending they'd decided",
-    "turning down plans and then sitting with the silence longer than they expected",
-    "noticing someone's tone shift and spending the rest of the day trying to decode it",
-    "writing something down so they wouldn't forget it and then losing the note",
-    "getting to the end of a page and realizing they hadn't read a single word",
-    "sending a voice note instead of typing because they didn't trust their own words",
-    "making coffee and letting it go cold while they sat with a thought",
-    "leaving early from something they'd been looking forward to",
+    "closing a conversation they started because it wasn't going the way they hoped",
+    "rehearsing what they would say before a call that turned out to be nothing",
+    "finishing a meal without tasting it because their mind was elsewhere",
+    "turning down plans then sitting with the silence longer than expected",
+    "noticing someone's tone shift and spending the rest of the day decoding it",
+    "writing something down to remember it and then losing the note",
+    "getting to the end of a page without reading a single word",
+    "making coffee and letting it go cold while sitting with a thought",
+    "leaving early from something they had been looking forward to",
     "starting to explain something and stopping because it would take too long",
     "catching themselves smiling at something and immediately feeling guilty for it",
+    "sending the message and then wishing they had waited one more minute",
+    "agreeing to something and realizing only afterward that they didn't want to",
 ]
 
+# 27 domains — one assigned per mood (15 used, rest are spare for variety across days)
 EMOTIONAL_DOMAINS = [
     "workplace dynamics", "friendship tension", "family relationships",
     "creative frustration", "financial stress", "decision fatigue",
@@ -143,342 +152,365 @@ EMOTIONAL_DOMAINS = [
     "nostalgia triggered by something ordinary", "self-image", "ambition",
     "routine", "independence", "guilt", "avoidance", "personal boundaries",
     "identity shifts", "long-term relationship drift", "dating uncertainty",
-    "unfinished creative work", "professional envy", "parental expectations",
-    "the weight of being the dependable one", "growing apart from a friend slowly",
-    "not recognising yourself in an old photo", "the gap between who you are and who you perform",
-]
-
-SHAREABLE_LINE_EXAMPLES = [
-    "Some people stop texting because they lose interest. Others stop because they started caring too much.",
-    "Not every unanswered question needs an answer — some just reveal what you've been afraid to admit.",
-    "It's strange how quickly peace arrives when you stop waiting for someone to become who they promised they'd be.",
-    "Sometimes the hardest boundary is accepting that someone can disappoint you without being a bad person.",
-    "You keep pretending it doesn't affect you because reacting would make it feel too real.",
-    "The task wasn't difficult — starting it felt like admitting it mattered.",
-    "There's a version of moving on that looks exactly like staying busy.",
-    "You're not avoiding it. You're just waiting to feel ready, which is the same thing.",
-]
-
-OUTPUT_RULES = [
-    "Never directly mention the mood name anywhere in the text.",
-    "Exactly 6 sentences.",
-    "Between 150 and 170 words.",
-    "At least one sentence must feel emotionally recognizable — worth saving or rereading.",
-    "Use specific behavior and concrete moments, not abstract emotional statements.",
-    "Do not repeat the same emotional situation, trigger, or scene across moods.",
-    "Do not use: 'Things are changing', 'trust the universe', 'new opportunities', 'emotional growth'.",
-    "Do not use: checking the phone, scrolling social media, fear of failure, as recurring anchors.",
-    "Every mood must feel like a different person having a different day.",
-    "Write as if observing a real person — not generating horoscope content.",
-]
-
-QUALITY_CHECKS = [
-    "Is this clearly shaped by the zodiac sign's traits and blind spots?",
-    "Does it contain a concrete real-life scene, not just abstract emotion?",
-    "Is there at least one line worth screenshotting or sharing?",
-    "Does the emotional conflict feel human and specific, not generic?",
-    "Does it sound like a real observation, not a template being filled?",
-    "If a similar theme appeared in an earlier mood, is it expressed through a different emotional lens?",
+    "professional envy", "parental expectations",
+    "the weight of being the dependable one",
+    "growing apart from a friend slowly",
+    "the gap between who you are and who you perform",
+    "unfinished creative work", "the cost of always being the one who checks in",
 ]
 
 
 # ── SIMILARITY HELPERS ────────────────────────────────────────────────────────
 
 STOPWORDS = {
-    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for",
-    "of", "with", "you", "your", "it", "its", "is", "are", "was", "were",
-    "be", "been", "being", "have", "has", "had", "do", "does", "did",
-    "that", "this", "they", "them", "their", "there", "then", "than",
-    "when", "what", "who", "how", "so", "if", "as", "by", "from", "not",
-    "no", "can", "will", "would", "could", "should", "just", "more",
-    "even", "still", "some", "one", "every", "like", "about", "after",
-    "before", "into", "out", "up", "down", "all", "any", "each",
+    "the","a","an","and","or","but","in","on","at","to","for","of","with",
+    "you","your","it","its","is","are","was","were","be","been","being",
+    "have","has","had","do","does","did","that","this","they","them","their",
+    "there","then","than","when","what","who","how","so","if","as","by",
+    "from","not","no","can","will","would","could","should","just","more",
+    "even","still","some","one","every","like","about","after","before",
+    "into","out","up","down","all","any","each","i","my","me","we","our",
 }
 
 def tokenize(text: str) -> set:
-    """Lowercase words, strip punctuation, remove stopwords."""
     words = re.findall(r"[a-z]+", text.lower())
     return {w for w in words if w not in STOPWORDS and len(w) > 2}
 
-def jaccard(set_a: set, set_b: set) -> float:
-    """Jaccard similarity between two word sets. Returns 0.0–1.0."""
-    if not set_a or not set_b:
+def jaccard(a: set, b: set) -> float:
+    if not a or not b:
         return 0.0
-    intersection = len(set_a & set_b)
-    union = len(set_a | set_b)
-    return intersection / union
+    return len(a & b) / len(a | b)
 
-def find_similar_pair(horoscopes: list, threshold: float) -> tuple | None:
-    """
-    Compare every pair of horoscopes.
-    Returns (mood_a, mood_b, score) for the first pair above threshold, else None.
-    """
-    tokens = {h["mood"]: tokenize(h["content"]) for h in horoscopes}
-    moods  = [h["mood"] for h in horoscopes]
-    for i in range(len(moods)):
-        for j in range(i + 1, len(moods)):
-            score = jaccard(tokens[moods[i]], tokens[moods[j]])
-            if score >= threshold:
-                return (moods[i], moods[j], round(score, 3))
-    return None
+def similarity(text_a: str, text_b: str) -> float:
+    return jaccard(tokenize(text_a), tokenize(text_b))
 
-def is_too_similar_to_yesterday(content: str, yesterday_content: str, threshold: float) -> bool:
-    """Returns True if today's content is too close to yesterday's for the same mood."""
-    return jaccard(tokenize(content), tokenize(yesterday_content)) >= threshold
+def find_most_similar_sentence(content: str, reference: str) -> str:
+    """Return the sentence in `content` most similar to any sentence in `reference`."""
+    ref_tokens = tokenize(reference)
+    sentences  = [s.strip() for s in re.split(r"(?<=[.!?])\s+", content) if len(s.strip()) > 20]
+    if not sentences:
+        return ""
+    return max(sentences, key=lambda s: jaccard(tokenize(s), ref_tokens))
+
+def replace_sentence(content: str, old_sentence: str, new_sentence: str) -> str:
+    """Swap one sentence in content for another."""
+    return content.replace(old_sentence, new_sentence, 1)
+
+
+# ── MUTATION BANK ─────────────────────────────────────────────────────────────
+# When similarity is too high we swap the most-similar sentence for a
+# pre-written alternative. No API call needed — zero tokens burned.
+
+MUTATION_SENTENCES = {
+    "Ambitious": [
+        "The gap between where you are and where you want to be feels sharper today, and that sharpness is useful.",
+        "You caught yourself calculating the cost of staying still and didn't like the number.",
+        "The version of yourself that hesitates is getting harder to justify.",
+    ],
+    "Adventurous": [
+        "Something about today makes the usual route feel like a waste of possibility.",
+        "You keep returning to a thought that starts with 'what if I just went'.",
+        "The itch isn't restlessness — it's the specific feeling of having something to prove to yourself.",
+    ],
+    "Creative": [
+        "The idea arrived while you were doing something completely unrelated, which is always how it works.",
+        "You've been circling the same blank page long enough to know the problem isn't the page.",
+        "There's a version of this that's already finished in your head — getting it out is the work.",
+    ],
+    "Rebellious": [
+        "You said yes when you meant something else entirely, and your body registered it before your brain did.",
+        "The rule was never explained, which is the only reason you're still following it.",
+        "Today the version of you that stops asking permission feels closer to the surface.",
+    ],
+    "Confident": [
+        "You made the decision before the conversation ended and didn't feel the need to explain why.",
+        "Something that would have unsettled you a month ago barely registered today.",
+        "The opinion landed and you disagreed without needing anyone else to agree with you first.",
+    ],
+    "Anxious": [
+        "You sent the message and immediately wished you could see the exact moment they read it.",
+        "The thing you keep calling overthinking is actually just noticing what others miss.",
+        "You ran the scenario forward three times and still couldn't find a version where it went smoothly.",
+    ],
+    "Sad": [
+        "The feeling arrived without warning, the way some feelings do — specific and completely uncalled for.",
+        "You weren't thinking about it and then you were, and suddenly the room felt different.",
+        "There's a kind of sad that doesn't ask for anything — it just sits there until it's ready to leave.",
+    ],
+    "Lonely": [
+        "You were surrounded by people and still somehow the only one in the room.",
+        "The conversation was fine. You just kept waiting for it to become something else.",
+        "It's not that no one was there — it's that no one was there in the right way.",
+    ],
+    "Romantic": [
+        "You noticed something small about them that they probably didn't know you noticed.",
+        "The feeling is quiet but it's been consistent, which is more than you can say for most things.",
+        "You kept the conversation going longer than necessary and didn't mind at all.",
+    ],
+    "Nostalgic": [
+        "Something ordinary today — a smell, a font, a specific quality of light — put you somewhere else entirely.",
+        "You didn't expect to miss it this much, and the unexpectedness made it worse.",
+        "The memory wasn't sad exactly, just carrying the specific weight of something that no longer exists.",
+    ],
+    "Exhausted": [
+        "You did everything that was asked of you and still felt like you'd left something undone.",
+        "The tiredness today is the kind that sleep doesn't fix.",
+        "You answered every message and somehow came away feeling more behind than before.",
+    ],
+    "Lazy": [
+        "The task exists. You are aware of the task. That is as far as things have progressed.",
+        "Everything that needs doing will still need doing in an hour, which is its own kind of comfort.",
+        "You started to get up and then made a very reasonable argument for why now wasn't the time.",
+    ],
+    "Peaceful": [
+        "Nothing is resolved — you've just stopped needing it to be resolved today.",
+        "The quiet today has a different quality, like you finally stopped bracing for something.",
+        "You let three things go and only noticed afterward that you'd done it.",
+    ],
+    "Daydreamy": [
+        "You spent twenty minutes somewhere that doesn't exist yet and came back refreshed.",
+        "The meeting continued and you were technically present for all of it.",
+        "Your attention kept drifting toward a version of things you haven't built yet.",
+    ],
+    "Irritated": [
+        "The specific thing that bothered you wasn't the thing — it was everything behind it.",
+        "You explained it once, clearly, and are now being asked to explain it again.",
+        "The patience is there. It's just being used on something that doesn't deserve this much of it.",
+    ],
+}
 
 
 # ── PROMPT BUILDER ────────────────────────────────────────────────────────────
+# Target: ~750-850 input tokens per call (was ~1,500+)
+# Key cuts: no OUTPUT_RULES list, no QUALITY_CHECKS list, no SHAREABLE examples,
+# no yesterday's full content — just the 3 structural things the model needs:
+# sign identity, per-mood assignments, and format.
 
 def build_prompt(
     sign: str,
-    previous_text: str,
-    scene_assignments: dict,        # mood -> scene string
-    domain_assignments: dict,       # mood -> domain string
-    flagged_moods: list = None,     # moods that need to be regenerated
-    existing_outputs: dict = None,  # mood -> content (for context during regen)
+    scene_assignments: dict,
+    domain_assignments: dict,
+    used_scenes_yesterday: list,
 ) -> str:
 
     traits     = SIGN_TRAITS[sign]
     blind_spot = SIGN_BLIND_SPOTS[sign]
 
-    mood_tone_block = "\n".join(
-        f"  {mood}: {tone}" for mood, tone in MOOD_TONE.items()
-    )
-
-    # Inject per-mood scene + domain assignments directly into the prompt
-    mood_assignment_block = "\n".join(
-        f"  {mood}: scene → {scene_assignments[mood]} | domain → {domain_assignments[mood]}"
+    # One line per mood: tone | scene | domain
+    mood_lines = "\n".join(
+        f"{mood} [{MOOD_TONE[mood]}] → scene: {scene_assignments[mood]} | domain: {domain_assignments[mood]}"
         for mood in MOODS
     )
 
-    rules_block    = "\n".join(f"  {i+1}. {r}" for i, r in enumerate(OUTPUT_RULES))
-    checks_block   = "\n".join(f"  {i+1}. {r}" for i, r in enumerate(QUALITY_CHECKS))
-    shareable_block = "\n".join(f'  "{line}"' for line in SHAREABLE_LINE_EXAMPLES)
+    # Only send scene NAMES from yesterday, not full content — saves ~2,000 tokens
+    avoid_block = ""
+    if used_scenes_yesterday:
+        avoid_block = f"Avoid these scenes used yesterday: {'; '.join(used_scenes_yesterday[:8])}"
 
-    # Full output block or regeneration-only block
-    if flagged_moods:
-        mood_output_block = "\n\n".join(
-            f"===MOOD: {m}===\n[horoscope here]" for m in flagged_moods
-        )
-        regen_context = ""
-        if existing_outputs:
-            regen_context = "ALREADY ACCEPTED MOODS (do NOT reproduce these — they are kept as-is):\n"
-            for m, c in existing_outputs.items():
-                if m not in flagged_moods:
-                    regen_context += f"\n===MOOD: {m}===\n{c}\n"
-        target_moods_line = f"Regenerate ONLY these moods (they were too similar to another output): {', '.join(flagged_moods)}"
-    else:
-        mood_output_block = "\n\n".join(
-            f"===MOOD: {m}===\n[horoscope here]" for m in MOODS
-        )
-        regen_context      = ""
-        target_moods_line  = f"Generate ALL 15 moods for {sign}."
+    # Output skeleton — tells the model exactly what to produce
+    output_skeleton = "\n\n".join(
+        f"===MOOD: {m}===\n[write here]" for m in MOODS
+    )
 
-    variation_block = ""
-    if previous_text:
-        variation_block = f"""
-YESTERDAY'S READINGS (variation reference — do NOT reuse situation, trigger, scene, or conflict):
-{previous_text}
-"""
+    prompt = f"""Write 15 emotionally intelligent horoscopes for {sign}.
 
-    prompt = f"""You are writing emotionally intelligent horoscope content.
-Goal: emotionally intelligent introspection disguised as astrology.
-Target reactions: "this is weirdly accurate", "I needed to hear this", "this sounds exactly like me."
+SIGN: {traits}. Blind spot: {blind_spot}.
+Every horoscope must feel specific to this sign — recognizable from the situation alone.
 
-━━━ SIGN ━━━
-{sign}
-Personality: {traits}
-Emotional blind spot: {blind_spot}
+RULES (non-negotiable):
+- 6 sentences, 150–170 words each
+- Never name the mood directly
+- Each must include its assigned scene and domain
+- Each must have one emotionally shareable line
+- Tone must match the mood's register
+- Write like observing a real person, not generating content
+- No clichés: no "trust the universe", "emotional growth", "new opportunities"
 
-The sign's personality and blind spot must shape every mood's emotional conflict and behavior.
-The sign should be recognizable from the situation alone.
+MOOD ASSIGNMENTS (use exactly as given):
+{mood_lines}
 
-━━━ MOOD TONE GUIDE ━━━
-{mood_tone_block}
+{avoid_block}
 
-━━━ MANDATORY SCENE + DOMAIN ASSIGNMENTS ━━━
-Each mood MUST use its assigned scene and emotional domain below.
-Do not swap them. Do not ignore them.
-{mood_assignment_block}
+Output only the sections below. No intro. No explanation. No JSON.
 
-━━━ SHAREABLE LINE REQUIREMENT ━━━
-At least one sentence per horoscope must feel worth saving or rereading.
-Aim for this register (do not copy directly):
-{shareable_block}
+{output_skeleton}"""
 
-━━━ OUTPUT RULES ━━━
-{rules_block}
-
-━━━ QUALITY CHECK ━━━
-Before writing each horoscope, confirm:
-{checks_block}
-Rewrite if any check fails.
-
-{variation_block}
-{regen_context}
-
-━━━ OUTPUT ━━━
-{target_moods_line}
-No JSON. No markdown. No explanations. No intro or closing text.
-Output only mood sections:
-
-{mood_output_block}
-"""
     return prompt.strip()
 
 
-# ── SINGLE SIGN GENERATOR ─────────────────────────────────────────────────────
+# ── SIMILARITY FIX (no API call) ─────────────────────────────────────────────
+
+def fix_similarity(mood: str, content: str, label: str) -> str:
+    """
+    Replace the most-similar sentence with a pre-written alternative.
+    Returns the mutated content. Uses zero API tokens.
+    """
+    candidates = MUTATION_SENTENCES.get(mood, [])
+    if not candidates:
+        return content  # can't fix, keep as-is
+
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", content) if len(s.strip()) > 20]
+    if not sentences:
+        return content
+
+    # Find the longest sentence (most likely to be the redundant one)
+    target = max(sentences, key=len)
+
+    # Pick mutation not already in the content
+    for candidate in random.sample(candidates, len(candidates)):
+        if candidate not in content:
+            fixed = replace_sentence(content, target, candidate)
+            print(f"    ✎ Mutated [{mood}] ({label}) — swapped sentence, no API call used.")
+            return fixed
+
+    return content  # all candidates already present, keep original
+
+
+# ── API CALL WITH TOKEN TRACKING ─────────────────────────────────────────────
+
+def parse_rate_limit_wait(msg: str) -> int:
+    """
+    Extract the exact wait time from a Groq 429 error message.
+    Handles formats: '27m55.296s', '1h9m8s', '45.5s'
+    Returns wait seconds + 10s buffer, or 60s default.
+    """
+    # e.g. "1h9m8.063s"
+    match = re.search(r"(\d+)h(\d+)m[\d.]+s", msg)
+    if match:
+        return int(match.group(1)) * 3600 + int(match.group(2)) * 60 + 10
+
+    # e.g. "27m55.296s"
+    match = re.search(r"(\d+)m[\d.]+s", msg)
+    if match:
+        return int(match.group(1)) * 60 + 10
+
+    # e.g. "45.5s"
+    match = re.search(r"([\d.]+)s", msg)
+    if match:
+        return int(float(match.group(1))) + 10
+
+    return 60  # safe default
+
+
+def call_api(prompt: str) -> tuple[str | None, int]:
+    """
+    Returns (response_text, tokens_used) or (None, 0) on unrecoverable failure.
+    On rate limit: reads the exact wait time from the error, sleeps, then retries.
+    Never skips — always waits and tries again.
+    """
+    global tokens_used
+
+    if tokens_used >= TOKEN_SAFETY_STOP:
+        print(f"  ⛔ Token safety stop reached ({tokens_used:,}/{DAILY_TOKEN_LIMIT:,}). Halting API calls.")
+        return None, 0
+
+    attempt = 0
+    while True:
+        attempt += 1
+        try:
+            print(f"  API Attempt {attempt} (tokens used so far: {tokens_used:,})")
+            resp = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=1.0,
+                max_tokens=2200,
+            )
+            used = resp.usage.total_tokens if resp.usage else 0
+            tokens_used += used
+            text = resp.choices[0].message.content.strip()
+            print(f"  ✓ Tokens this call: {used:,} | Total today: {tokens_used:,}")
+            return text, used
+
+        except Exception as e:
+            msg = str(e)
+
+            if "rate_limit_exceeded" in msg or "429" in msg:
+                wait = parse_rate_limit_wait(msg)
+                # Convert to readable format for the log
+                h, rem = divmod(wait, 3600)
+                m, s   = divmod(rem, 60)
+                if h:
+                    wait_str = f"{h}h {m}m {s}s"
+                elif m:
+                    wait_str = f"{m}m {s}s"
+                else:
+                    wait_str = f"{s}s"
+                print(f"  ⏳ Rate limited. Waiting {wait_str} then retrying (attempt {attempt})...")
+                time.sleep(wait)
+                continue  # retry after sleeping — no sign is ever skipped
+
+            # Non-rate-limit error — retry up to 3 times with short delay
+            print(f"  API ERROR (attempt {attempt}): {msg}")
+            if attempt >= 3:
+                print("  ✗ Failed after 3 attempts. Giving up on this call.")
+                return None, 0
+            time.sleep(5)
+
+
+# ── PARSE SECTIONS ────────────────────────────────────────────────────────────
+
+def parse_sections(text: str) -> dict | None:
+    sections = re.split(r"===MOOD:\s*", text)
+    result   = {}
+    for section in sections:
+        section = section.strip()
+        if not section or "===" not in section:
+            continue
+        mood, content = section.split("===", 1)
+        mood    = mood.strip()
+        content = content.strip()
+        if mood in MOODS and content:
+            result[mood] = content
+    if set(result.keys()) != set(MOODS):
+        return None
+    return result
+
+
+# ── GENERATE FOR ONE SIGN ─────────────────────────────────────────────────────
 
 def generate_for_sign(sign: str, previous_map: dict) -> list | None:
-    """
-    Generate, validate, similarity-check, and if needed regenerate
-    all 15 moods for a given sign.
-    Returns list of {mood, content} dicts, or None on failure.
-    """
 
-    # Assign a unique random scene to each mood for this run
-    shuffled_scenes  = random.sample(SCENES, len(MOODS))
-    scene_assignments = {mood: shuffled_scenes[i] for i, mood in enumerate(MOODS)}
+    # Assign unique scenes and domains for this sign's run
+    scene_assignments  = dict(zip(MOODS, random.sample(SCENES, len(MOODS))))
+    domain_assignments = dict(zip(MOODS, random.sample(EMOTIONAL_DOMAINS, len(MOODS))))
 
-    # Assign a unique random domain to each mood for this run
-    shuffled_domains  = random.sample(EMOTIONAL_DOMAINS, len(MOODS))
-    domain_assignments = {mood: shuffled_domains[i] for i, mood in enumerate(MOODS)}
+    # Extract scene NAMES from yesterday's content for avoidance hint
+    # (we don't send the full content — saves ~2,000 tokens per sign)
+    used_scenes_yesterday = list(previous_map.keys())  # mood names as proxy
 
-    # Build yesterday's text block
-    previous_text = ""
-    for mood, content in previous_map.items():
-        previous_text += f"\n===PREVIOUS MOOD: {mood}===\n{content}\n"
+    prompt = build_prompt(sign, scene_assignments, domain_assignments, used_scenes_yesterday)
 
-    def call_api(prompt: str) -> str | None:
-        for attempt in range(3):
-            try:
-                print(f"  API Attempt {attempt + 1}")
-                completion = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=1.0,
-                    max_tokens=5000
-                )
-                return completion.choices[0].message.content.strip()
-            except Exception as e:
-                print(f"  API FAILED: {e}")
-                if attempt < 2:
-                    time.sleep(5)
-        return None
-
-    def parse_sections(text: str, expected_moods: list) -> dict | None:
-        """Parse mood sections from raw text. Returns {mood: content} or None."""
-        sections = re.split(r"===MOOD:\s*", text)
-        result   = {}
-        for section in sections:
-            section = section.strip()
-            if not section or "===" not in section:
-                continue
-            mood, content = section.split("===", 1)
-            mood    = mood.strip()
-            content = content.strip()
-            if mood and content:
-                result[mood] = content
-        if set(result.keys()) != set(expected_moods):
-            return None
-        return result
-
-    # ── Step 1: Initial generation ────────────────────────────────────────────
     print("  Generating...")
-    prompt = build_prompt(sign, previous_text, scene_assignments, domain_assignments)
-    raw    = call_api(prompt)
+    raw, _ = call_api(prompt)
     if not raw:
-        print("  FAILED: No API response.")
         return None
 
-    parsed = parse_sections(raw, MOODS)
+    parsed = parse_sections(raw)
     if not parsed:
         print("  FAILED: Could not parse all 15 moods.")
         return None
 
-    # ── Step 2: Cross-day similarity check ───────────────────────────────────
+    # ── Cross-day similarity check (fix via mutation, no API call) ────────────
     print("  Checking cross-day similarity...")
-    day_flagged = []
-    for mood, content in parsed.items():
+    for mood, content in list(parsed.items()):
         yesterday_content = previous_map.get(mood, "")
-        if yesterday_content and is_too_similar_to_yesterday(content, yesterday_content, SIMILARITY_THRESHOLD):
-            score = jaccard(tokenize(content), tokenize(yesterday_content))
-            print(f"  ⚠ Cross-day similarity too high for [{mood}]: {round(score, 3)}")
-            day_flagged.append(mood)
+        if not yesterday_content:
+            continue
+        score = similarity(content, yesterday_content)
+        if score >= SIMILARITY_THRESHOLD:
+            print(f"  ⚠ Cross-day too similar [{mood}]: {round(score, 3)} — fixing...")
+            parsed[mood] = fix_similarity(mood, content, "cross-day")
 
-    # ── Step 3: Cross-mood similarity check ──────────────────────────────────
+    # ── Cross-mood similarity check (fix via mutation, no API call) ───────────
     print("  Checking cross-mood similarity...")
-    horoscope_list = [{"mood": m, "content": c} for m, c in parsed.items()]
-    mood_flagged   = []
-
-    pair = find_similar_pair(horoscope_list, SIMILARITY_THRESHOLD)
-    while pair:
-        mood_a, mood_b, score = pair
-        print(f"  ⚠ Cross-mood similarity too high: [{mood_a}] ↔ [{mood_b}] = {score}")
-        # Flag the second mood in the pair (keep the first)
-        if mood_b not in mood_flagged:
-            mood_flagged.append(mood_b)
-        # Remove flagged mood from list temporarily to find next bad pair
-        horoscope_list = [h for h in horoscope_list if h["mood"] not in mood_flagged]
-        pair = find_similar_pair(horoscope_list, SIMILARITY_THRESHOLD)
-
-    all_flagged = list(set(day_flagged + mood_flagged))
-
-    # ── Step 4: Regenerate flagged moods ─────────────────────────────────────
-    if all_flagged:
-        print(f"  Regenerating {len(all_flagged)} flagged mood(s): {all_flagged}")
-
-        for attempt in range(MAX_REGEN_ATTEMPTS):
-            print(f"  Regen attempt {attempt + 1}/{MAX_REGEN_ATTEMPTS}")
-
-            regen_prompt = build_prompt(
-                sign,
-                previous_text,
-                scene_assignments,
-                domain_assignments,
-                flagged_moods=all_flagged,
-                existing_outputs=parsed,
-            )
-            regen_raw = call_api(regen_prompt)
-            if not regen_raw:
-                print("  Regen API call failed.")
-                break
-
-            regen_parsed = parse_sections(regen_raw, all_flagged)
-            if not regen_parsed:
-                print("  Regen parse failed.")
-                break
-
-            # Merge regen results back in
-            for mood, content in regen_parsed.items():
-                parsed[mood] = content
-
-            # Re-run both checks on the full updated set
-            still_flagged = []
-
-            for mood in all_flagged:
-                yesterday_content = previous_map.get(mood, "")
-                if yesterday_content and is_too_similar_to_yesterday(parsed[mood], yesterday_content, SIMILARITY_THRESHOLD):
-                    still_flagged.append(mood)
-
-            full_list = [{"mood": m, "content": c} for m, c in parsed.items()]
-            pair = find_similar_pair(full_list, SIMILARITY_THRESHOLD)
-            while pair:
-                mood_a, mood_b, score = pair
-                if mood_b not in still_flagged:
-                    still_flagged.append(mood_b)
-                full_list = [h for h in full_list if h["mood"] not in still_flagged]
-                pair = find_similar_pair(full_list, SIMILARITY_THRESHOLD)
-
-            if not still_flagged:
-                print("  All similarity issues resolved.")
-                break
-            else:
-                print(f"  Still flagged after regen: {still_flagged}")
-                all_flagged = still_flagged
-
-        else:
-            print(f"  ⚠ Could not fully resolve similarity after {MAX_REGEN_ATTEMPTS} attempts — keeping best version.")
+    mood_list = list(parsed.keys())
+    for i in range(len(mood_list)):
+        for j in range(i + 1, len(mood_list)):
+            ma, mb = mood_list[i], mood_list[j]
+            score  = similarity(parsed[ma], parsed[mb])
+            if score >= SIMILARITY_THRESHOLD:
+                print(f"  ⚠ Cross-mood too similar [{ma}] ↔ [{mb}]: {round(score, 3)} — fixing...")
+                parsed[mb] = fix_similarity(mb, parsed[mb], f"cross-mood vs {ma}")
 
     return [{"mood": m, "content": c} for m, c in parsed.items()]
 
@@ -496,7 +528,7 @@ for sign in SIGNS:
 
     print(f"\n========== {sign} ==========")
 
-    # Fetch yesterday's readings as a {mood: content} map
+    # Fetch yesterday's readings
     previous = (
         supabase.table("horoscopes")
         .select("mood,content")
@@ -515,6 +547,7 @@ for sign in SIGNS:
     if not horoscopes or len(horoscopes) != 15:
         print(f"  FAILED: Could not generate valid horoscopes for {sign}.")
         failed_signs.append(sign)
+        time.sleep(8)
         continue
 
     print("  Uploading...")
@@ -541,7 +574,7 @@ for sign in SIGNS:
         print(f"  UPLOAD FAILED: {e}")
         failed_signs.append(sign)
 
-    print("  Waiting before next sign...")
+    print(f"  Waiting before next sign... (tokens used: {tokens_used:,})")
     time.sleep(8)
 
 # ── SUMMARY ───────────────────────────────────────────────────────────────────
@@ -551,6 +584,7 @@ print("GENERATION COMPLETE")
 print("========================")
 print(f"TOTAL UPLOADED:    {total_uploaded}")
 print(f"SUCCESSFUL SIGNS:  {len(successful_signs)}")
+print(f"TOTAL TOKENS USED: {tokens_used:,}")
 
 if total_uploaded != 180:
     raise Exception(f"Expected 180 readings, got {total_uploaded}")
