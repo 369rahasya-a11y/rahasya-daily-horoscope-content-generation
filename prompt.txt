@@ -1,30 +1,166 @@
+Generate emotionally intelligent daily horoscope content that feels personal, psychologically accurate, emotionally specific, and socially shareable.
+
+STYLE
+
+The writing should feel like:
+
+* a late-night realization
+* subtle inner dialogue
+* emotionally observant modern writing
+* a close friend noticing what someone refuses to admit
+
+Create reactions such as:
+
+* "this is weirdly accurate"
+* "I needed to hear this"
+* "this sounds exactly like me"
+
+The writing must be:
+
+* emotionally human
+* modern and conversational
+* intimate but believable
+* emotionally realistic
+* screenshot-worthy
+
+Avoid:
+
+* generic positivity
+* motivational speeches
+* cheesy spirituality
+* fake inspiration
+* excessive optimism
+* repetitive emotional patterns
+* dramatic prophecy language
+
+EMOTIONAL REALISM
+
+Ground every horoscope in recognizable human behavior:
+
+* internal dialogue
+* emotional contradictions
+* relationship ambiguity
+* avoidance patterns
+* overthinking loops
+* social tension
+* emotional exhaustion
+* unspoken desires
+* self-protection
+* quiet realizations
+
+Examples:
+
+* You keep pretending it doesn't affect you because reacting would make it feel too real.
+* Part of you wants reassurance while another part refuses to ask for it.
+* Some distance has started feeling more peaceful than certain connections.
+* You're tired of carrying conversations that barely meet you halfway.
+
+MOOD SYSTEM
+
+Ambitious, Adventurous, Creative, Rebellious, Confident:
+
+* bold
+* decisive
+* emotionally sharp
+* energetic
+
+Anxious, Sad, Lonely, Romantic, Nostalgic:
+
+* warm
+* vulnerable
+* intimate
+* reflective
+
+Exhausted, Lazy, Peaceful, Daydreamy, Irritated:
+
+* grounded
+* calm
+* spacious
+* emotionally balanced
+
+UNIQUENESS RULE
+
+Each horoscope must contain at least one:
+
+* specific behavior
+* specific social interaction
+* specific thought pattern
+* specific emotional contradiction
+* specific moment of self-awareness
+
+Avoid writing that could apply equally to everyone.
+
+SCREENSHOT TEST
+
+At least one sentence should feel worth saving, sharing, or rereading later.
+
+The line should feel emotionally recognizable rather than inspirational.
+
+DIVERSITY RULE
+
+Across the 15 moods:
+
+* vary sentence openings
+* vary emotional themes
+* vary relationship dynamics
+* vary internal conflicts
+* vary emotional scenarios
+
+Do not reuse the same emotional situation repeatedly.
+
 RULES
+
 * Never directly mention the mood.
 * Exactly 6 sentences.
 * Between 150 and 170 words.
 * Include at least one emotionally recognizable or shareable line.
 * Use emotionally specific behavior instead of vague statements.
 * Make each sign and mood feel distinct.
-* Avoid emotional clichés, horoscope clichés, and generic life advice.
+* Use unique phrasing every time.
 
-SCENE REQUIREMENT
-Every horoscope must include at least one concrete real-life moment
-(e.g. rereading a message before sending, staring at an unfinished task,
-leaving a tab open all day, cleaning instead of dealing with an emotion).
+Prefer:
 
-UNIQUENESS
-Each horoscope must have one specific: behavior, social interaction,
-thought pattern, emotional contradiction, and moment of self-awareness.
-No two moods should share the same conflict, realization, or social interaction.
+* You keep checking a conversation that already ended.
+* You're waiting for reassurance from someone who doesn't know you're looking for it.
+* Part of you wants to reply immediately while another part wants to disappear for a day.
 
-QUALITY CHECK
-1. Specific to the zodiac sign? If not, rewrite.
-2. Contains a concrete real-life scene? If not, rewrite.
-3. Has one shareable/emotionally resonant line? If not, rewrite.
-4. Conflict feels human, not generic? If not, rewrite.
-5. Reads like an observation of a real person? If not, rewrite.
+Avoid:
 
-OUTPUT FORMAT:
+* Things are changing.
+* I sense emotional growth.
+* New opportunities are coming.
+
+REPETITION PREVENTION
+
+Avoid repeatedly starting with:
+
+* You're feeling
+* Your mind is
+* You keep
+* Part of you
+* The truth is
+* Remember that
+
+Vary openings using:
+
+* observations
+* scenes
+* conversations
+* emotional habits
+* quiet realizations
+
+Do not sound like:
+
+* a therapist
+* a life coach
+* a guru
+* a generic horoscope generator
+
+Emotional goal:
+
+Emotionally intelligent introspection disguised as astrology.
+
+OUTPUT FORMAT
 
 ===MOOD: Ambitious===
 horoscope content
@@ -72,6 +208,5 @@ horoscope content
 horoscope content
 
 Generate all 15 moods exactly once.
-Generate only for the requested zodiac sign.
 Output only the mood sections.
-Do not use JSON. Do not explain. Do not include introductions or conclusions.
+Do not use JSON.
