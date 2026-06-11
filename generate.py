@@ -40,19 +40,33 @@ MOODS = [
 ]
 
 SIGN_TRAITS = {
-    "Aries": "direct, impulsive, action-oriented, competitive",
-    "Taurus": "steady, comfort-seeking, loyal, resistant to change",
-    "Gemini": "curious, mentally restless, adaptable, socially observant",
-    "Cancer": "emotionally intuitive, protective, nostalgic, sensitive",
-    "Leo": "expressive, proud, warm-hearted, attention-aware",
-    "Virgo": "analytical, self-critical, observant, improvement-focused",
-    "Libra": "relationship-oriented, diplomatic, harmony-seeking, indecisive",
-    "Scorpio": "intense, private, emotionally deep, all-or-nothing",
-    "Sagittarius": "freedom-seeking, adventurous, optimistic, blunt",
-    "Capricorn": "disciplined, ambitious, practical, emotionally reserved",
-    "Aquarius": "independent, unconventional, future-focused, detached",
-    "Pisces": "imaginative, empathetic, dreamy, emotionally porous"
+"Aries": "acts before thinking, direct, competitive, impulsive, hides vulnerability through action, becomes restless when emotions slow them down, dislikes waiting for clarity",
+
+```
+"Taurus": "steady, comfort-seeking, loyal, emotionally persistent, values stability, resists sudden change, holds onto people and routines longer than necessary, seeks security during uncertainty",
+
+"Gemini": "curious, mentally restless, adaptable, socially observant, processes emotions through thinking, overanalyzes conversations, seeks stimulation, notices subtle shifts in communication",
+
+"Cancer": "emotionally intuitive, protective, nostalgic, sensitive, remembers emotional details, withdraws when hurt, values emotional safety, deeply affected by relationship dynamics",
+
+"Leo": "expressive, proud, warm-hearted, attention-aware, wants appreciation, notices when effort is overlooked, generous with affection, emotionally driven by recognition and connection",
+
+"Virgo": "analytical, self-critical, observant, improvement-focused, processes emotions through problem-solving, notices flaws and inconsistencies, overthinks details, seeks understanding before action",
+
+"Libra": "relationship-oriented, diplomatic, harmony-seeking, indecisive, avoids conflict, values mutual effort, highly aware of social dynamics, struggles when relationships feel unbalanced",
+
+"Scorpio": "intense, private, emotionally deep, all-or-nothing, highly protective of vulnerability, struggles with trust, feels emotions strongly but reveals them selectively, values loyalty above words",
+
+"Sagittarius": "freedom-seeking, adventurous, optimistic, blunt, dislikes feeling restricted, seeks perspective during emotional situations, processes feelings through movement, exploration, and future possibilities",
+
+"Capricorn": "disciplined, ambitious, practical, emotionally reserved, focuses on responsibility during emotional stress, struggles to ask for help, values competence, often suppresses feelings to stay productive",
+
+"Aquarius": "independent, unconventional, future-focused, emotionally detached when overwhelmed, intellectualizes feelings, values autonomy, questions social expectations, seeks distance before emotional clarity",
+
+"Pisces": "imaginative, empathetic, dreamy, emotionally porous, absorbs surrounding emotions, escapes into imagination when overwhelmed, deeply sensitive to atmosphere, values emotional connection and meaning"
+
 }
+
 
 with open("prompt.txt", "r", encoding="utf-8") as f:
     MASTER_PROMPT = f.read()
