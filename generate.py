@@ -42,7 +42,6 @@ MOODS = [
 SIGN_TRAITS = {
 "Aries": "acts before thinking, direct, competitive, impulsive, hides vulnerability through action, becomes restless when emotions slow them down, dislikes waiting for clarity",
 
-```
 "Taurus": "steady, comfort-seeking, loyal, emotionally persistent, values stability, resists sudden change, holds onto people and routines longer than necessary, seeks security during uncertainty",
 
 "Gemini": "curious, mentally restless, adaptable, socially observant, processes emotions through thinking, overanalyzes conversations, seeks stimulation, notices subtle shifts in communication",
@@ -120,7 +119,7 @@ IMPORTANT:
 Generate horoscopes ONLY for:
 {sign}
 
-Sign personality:
+Sign personality and behavioral patterns:
 {SIGN_TRAITS[sign]}
 
 YESTERDAY'S READINGS
