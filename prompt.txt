@@ -1,4 +1,15 @@
-Generate emotionally intelligent daily horoscope content that feels personal, psychologically accurate, emotionally specific, and socially shareable.
+GENERATE EMOTIONALLY INTELLIGENT DAILY HOROSCOPE CONTENT THAT FEELS PERSONAL, PSYCHOLOGICALLY ACCURATE, EMOTIONALLY SPECIFIC, AND SOCIALLY SHAREABLE.
+
+CORE GOAL
+
+The reader should feel:
+
+* "This is weirdly accurate."
+* "Why does this sound exactly like me?"
+* "I needed to hear this."
+* "Someone finally put this feeling into words."
+
+The content should feel like emotional observation disguised as astrology.
 
 STYLE
 
@@ -9,29 +20,26 @@ The writing should feel like:
 * emotionally observant modern writing
 * a close friend noticing what someone refuses to admit
 
-Create reactions such as:
-
-* "this is weirdly accurate"
-* "I needed to hear this"
-* "this sounds exactly like me"
-
 The writing must be:
 
 * emotionally human
 * modern and conversational
 * intimate but believable
 * emotionally realistic
+* psychologically specific
 * screenshot-worthy
 
 Avoid:
 
 * generic positivity
 * motivational speeches
+* guru language
+* therapy language
 * cheesy spirituality
 * fake inspiration
-* excessive optimism
-* repetitive emotional patterns
+* manifestation language
 * dramatic prophecy language
+* fortune telling
 
 EMOTIONAL REALISM
 
@@ -44,100 +52,165 @@ Ground every horoscope in recognizable human behavior:
 * overthinking loops
 * social tension
 * emotional exhaustion
-* unspoken desires
 * self-protection
 * quiet realizations
+* unmet expectations
+* comparison habits
+* reassurance seeking
 
 Examples:
 
-* You keep pretending it doesn't affect you because reacting would make it feel too real.
-* Part of you wants reassurance while another part refuses to ask for it.
-* Some distance has started feeling more peaceful than certain connections.
-* You're tired of carrying conversations that barely meet you halfway.
+* You reread a message even though you already know what it says.
+* A conversation ended hours ago but your brain is still editing it.
+* You want reassurance but dislike needing it.
+* You're waiting for effort from someone who thinks they're already giving enough.
+* The thing you're avoiding is taking more energy than doing it would.
 
-MOOD SYSTEM
+SIGN EXPRESSION RULE
 
-Ambitious, Adventurous, Creative, Rebellious, Confident:
+Every emotional experience must be filtered through the sign's natural coping style.
 
-* bold
-* decisive
-* emotionally sharp
-* energetic
+Aries = acts
+Taurus = stabilizes
+Gemini = thinks
+Cancer = remembers
+Leo = seeks recognition
+Virgo = analyzes
+Libra = relates
+Scorpio = protects
+Sagittarius = escapes
+Capricorn = works
+Aquarius = detaches
+Pisces = imagines
 
-Anxious, Sad, Lonely, Romantic, Nostalgic:
+The same mood should feel different depending on the sign.
 
-* warm
-* vulnerable
-* intimate
-* reflective
+Example:
 
-Exhausted, Lazy, Peaceful, Daydreamy, Irritated:
+Anxious Aries:
+wants immediate action.
 
-* grounded
-* calm
-* spacious
-* emotionally balanced
+Anxious Virgo:
+analyzes details.
 
-SIGN DIFFERENTIATION RULE
+Anxious Aquarius:
+distances emotionally and intellectualizes.
 
-The zodiac sign must meaningfully influence:
+Anxious Pisces:
+imagines future pain.
 
-* emotional reactions
-* communication style
-* relationship behavior
-* coping mechanisms
-* fears
-* desires
-* decision-making patterns
-* internal conflict
+MOOD IDENTITY RULE
 
-The same mood must feel different across signs.
+Each mood has its own emotional engine.
 
-Before writing each horoscope ask:
+Ambitious:
+achievement, comparison, proving yourself, recognition
 
-"Would this still work if I changed the zodiac sign?"
+Adventurous:
+curiosity, novelty, freedom, exploration
 
-If yes, rewrite until the sign personality is clearly visible through behavior, reactions, and emotional patterns.
-BEHAVIOR OVER EMOTION
+Creative:
+expression, unfinished ideas, inspiration, imagination
 
-Show emotions through behavior rather than explaining them.
+Rebellious:
+boundaries, independence, resistance, authenticity
 
-Prefer:
+Confident:
+self-trust, certainty, ownership, courage
 
-* deleting a message
-* rereading a conversation
-* avoiding a phone call
-* checking a profile
-* leaving a task unfinished
-* pretending to be busy
-* replaying a moment
-* opening and closing the same app
+Anxious:
+uncertainty, prediction loops, reassurance seeking
 
-Avoid:
+Sad:
+loss, grief, disappointment, emotional heaviness
 
-* searching for a sense of
-* feeling a sense of
-* trying to find a sense of
-* discovering that
-* learning to
+Lonely:
+disconnection, invisibility, unmet connection
 
-Behavior should reveal emotion.
-Do not explain emotions when behavior can show them.
+Romantic:
+attraction, vulnerability, anticipation
 
+Nostalgic:
+memory, longing, comparison between then and now
+
+Exhausted:
+overextension, burnout, emotional depletion
+
+Lazy:
+resistance, rest, avoidance, low urgency
+
+Peaceful:
+acceptance, simplicity, emotional steadiness
+
+Daydreamy:
+possibility, imagination, fantasy, curiosity
+
+Irritated:
+boundary violations, accumulated frustration, unmet expectations
+
+UNIQUENESS RULE
+
+Every horoscope must contain:
+
+* one specific behavior
+* one specific emotional contradiction
+* one specific thought pattern
+* one specific social dynamic
+* one specific moment of self-awareness
+
+Avoid writing that could apply equally to everyone.
 
 SCREENSHOT TEST
 
 At least one sentence should feel worth saving, sharing, or rereading later.
 
-The line should feel emotionally recognizable rather than inspirational.
+The sentence should feel emotionally recognizable, not inspirational.
+
+ANTI-HOROSCOPE FILTER
+
+Before writing each horoscope:
+
+If a sentence could appear in a motivational quote:
+rewrite it.
+
+If a sentence could apply equally to every sign:
+rewrite it.
+
+If a sentence sounds like advice:
+replace it with observation.
+
+If a sentence sounds like a life coach:
+remove it.
+
+ANTI-TEMPLATE RULE
+
+Do not repeatedly use:
+
+* You're feeling...
+* You're trying...
+* Part of you...
+* The truth is...
+* Remember that...
+* Perhaps it's time...
+
+Vary openings using:
+
+* scenes
+* observations
+* conversations
+* habits
+* memories
+* realizations
+* specific moments
 
 DIVERSITY RULE
 
 Across the 15 moods:
 
-* vary sentence openings
 * vary emotional themes
 * vary relationship dynamics
+* vary sentence rhythm
+* vary social situations
 * vary internal conflicts
 * vary emotional scenarios
 
@@ -148,112 +221,14 @@ RULES
 * Never directly mention the mood.
 * Exactly 6 sentences.
 * Between 150 and 170 words.
-* Include at least one emotionally recognizable or shareable line.
-* Use emotionally specific behavior instead of vague statements.
-* Make each sign and mood feel distinct.
-* Avoid emotional clichés, horoscope clichés, and generic life advice.
-* Use unique phrasing every time.
-
-Prefer:
-
-* You keep checking a conversation that already ended.
-* You're waiting for reassurance from someone who doesn't know you're looking for it.
-* Part of you wants to reply immediately while another part wants to disappear for a day.
-
-Avoid:
-
-* Things are changing.
-* I sense emotional growth.
-* New opportunities are coming.
-
-REPETITION PREVENTION
-
-Avoid repeatedly starting with:
-
-* You're feeling
-* Your mind is
-* You keep
-* Part of you
-* The truth is
-* Remember that
-
-Vary openings using:
-
-* observations
-* scenes
-* conversations
-* emotional habits
-* quiet realizations
-
-Do not sound like:
-
-* a therapist
-* a life coach
-* a guru
-* a generic horoscope generator
-
-SCENE REQUIREMENT
-
-Every horoscope must include at least one concrete real-life moment.
-
-Examples:
-
-* rereading a message before sending
-* staring at an unfinished task
-* leaving a tab open all day
-* cleaning instead of dealing with an emotion
-* avoiding a phone call
-* rewriting a text several times
-* scrolling without reading
-* replaying a conversation
-* pretending to be busy
-* checking a profile you said you were done checking
-
-MOOD DIFFERENTIATION RULE
-
-The mood must influence:
-
-* emotional tone
-* pace of thinking
-* social behavior
-* attention patterns
-* emotional needs
-* relationship dynamics
-* self-talk
-
-The same zodiac sign must behave differently across moods.
-
-Before writing each horoscope ask:
-
-"Could a reader correctly identify the mood without seeing the label?"
-
-If not, rewrite until the mood is clearly visible through behavior, thoughts, and emotional tension.
-
-UNIQUENESS
-
-Each horoscope must have one specific:
-
-* behavior
-* social interaction
-* thought pattern
-* emotional contradiction
-* moment of self-awareness
-
-No two moods should share the same conflict, realization, or social interaction.
-
-QUALITY CHECK
-
-1. Could a reader guess the zodiac sign from the behavior, reactions, and emotional conflict alone?? If yes, rewrite.
-2. Could this be mistaken for another mood? If yes, rewrite.
-3. Contains a concrete real-life scene? If not, rewrite.
-4. Contains a specific behavior? If not, rewrite.
-5. Contains a recognizable human conflict? If not, rewrite.
-6. Has one emotionally shareable line? If not, rewrite.
-7. Reads like an observation of a real person rather than advice? If not, rewrite.
-
-Emotional goal:
-
-Emotionally intelligent introspection disguised as astrology.
+* Include at least one emotionally recognizable line.
+* Use emotionally specific behavior.
+* Make each sign and mood clearly distinct.
+* Use fresh phrasing every time.
+* Avoid summaries.
+* Avoid conclusions.
+* Avoid lessons.
+* Avoid advice.
 
 OUTPUT FORMAT
 
@@ -303,8 +278,5 @@ horoscope content
 horoscope content
 
 Generate all 15 moods exactly once.
-Generate only for the requested zodiac sign.
 Output only the mood sections.
 Do not use JSON.
-Do not explain.
-Do not include introductions or conclusions.
