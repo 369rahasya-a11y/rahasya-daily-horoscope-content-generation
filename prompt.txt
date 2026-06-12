@@ -98,18 +98,32 @@ Before writing each horoscope ask:
 "Would this still work if I changed the zodiac sign?"
 
 If yes, rewrite until the sign personality is clearly visible through behavior, reactions, and emotional patterns.
+BEHAVIOR OVER EMOTION
 
-UNIQUENESS RULE
+Show emotions through behavior rather than explaining them.
 
-Each horoscope must contain at least one:
+Prefer:
 
-* specific behavior
-* specific social interaction
-* specific thought pattern
-* specific emotional contradiction
-* specific moment of self-awareness
+* deleting a message
+* rereading a conversation
+* avoiding a phone call
+* checking a profile
+* leaving a task unfinished
+* pretending to be busy
+* replaying a moment
+* opening and closing the same app
 
-Avoid writing that could apply equally to everyone.
+Avoid:
+
+* searching for a sense of
+* feeling a sense of
+* trying to find a sense of
+* discovering that
+* learning to
+
+Behavior should reveal emotion.
+Do not explain emotions when behavior can show them.
+
 
 SCREENSHOT TEST
 
@@ -229,7 +243,7 @@ No two moods should share the same conflict, realization, or social interaction.
 
 QUALITY CHECK
 
-1. Could this be mistaken for another zodiac sign? If yes, rewrite.
+1. Could a reader guess the zodiac sign from the behavior, reactions, and emotional conflict alone?? If yes, rewrite.
 2. Could this be mistaken for another mood? If yes, rewrite.
 3. Contains a concrete real-life scene? If not, rewrite.
 4. Contains a specific behavior? If not, rewrite.
