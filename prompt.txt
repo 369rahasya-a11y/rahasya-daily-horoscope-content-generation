@@ -40,7 +40,28 @@ Avoid:
 * manifestation language
 * dramatic prophecy language
 * fortune telling
+SIGN EXPRESSION RULE
 
+The horoscope must express the emotional situation
+through BOTH:
+
+1. the sign's personality traits
+2. the sign's natural coping style
+
+The sign's coping style determines HOW they react to emotions.
+
+Aries = acts
+Taurus = stabilizes
+Gemini = thinks
+Cancer = remembers
+Leo = seeks recognition
+Virgo = analyzes
+Libra = relates
+Scorpio = protects
+Sagittarius = escapes
+Capricorn = works
+Aquarius = detaches
+Pisces = imagines
 EMOTIONAL REALISM
 
 Ground every horoscope in recognizable human behavior:
