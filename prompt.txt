@@ -116,6 +116,21 @@ Examples:
 * You're waiting for effort from someone who thinks they're already giving enough.
 * The thing you're avoiding is taking more energy than doing it would.
 
+Every horoscope must begin with:
+- a scene
+OR
+- a behavior
+OR
+- a conversation
+OR
+- an internal thought
+
+Never begin with:
+- You're feeling
+- You're trying
+- You're searching
+- You're wondering
+
 SIGN EXPRESSION RULE
 
 Every emotional experience must be filtered through the sign's natural coping style.
