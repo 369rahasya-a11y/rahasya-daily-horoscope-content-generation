@@ -40,6 +40,35 @@ Avoid:
 * manifestation language
 * dramatic prophecy language
 * fortune telling
+STRUCTURE VARIATION RULE
+
+Across the 15 moods:
+
+- Do not reuse the same narrative structure.
+- Do not repeatedly use:
+  "You're learning..."
+  "You're searching..."
+  "You're finding..."
+  "You're trying..."
+  "You're feeling..."
+
+Use different narrative forms:
+
+1. Internal monologue
+2. Observation
+3. Memory
+4. Conversation
+5. Text message scenario
+6. Relationship tension
+7. Workplace situation
+8. Family dynamic
+9. Social media interaction
+10. Private realization
+11. Habit pattern
+12. Future worry
+13. Comparison with someone else
+14. Avoidance behavior
+15. Unexpected emotional trigger
 SIGN EXPRESSION RULE
 
 The horoscope must express the emotional situation
