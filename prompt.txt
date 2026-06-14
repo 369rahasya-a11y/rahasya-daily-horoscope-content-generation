@@ -27,126 +27,41 @@ The writing must be:
 * intimate but believable
 * emotionally realistic
 * psychologically specific
-* screenshot-worthy
 
-Avoid:
+Avoid advice, motivation, coaching, therapy language, spirituality, manifestation, prophecy, fortune-telling, and generic positivity.
 
-* generic positivity
-* motivational speeches
-* guru language
-* therapy language
-* cheesy spirituality
-* fake inspiration
-* manifestation language
-* dramatic prophecy language
-* fortune telling
 STRUCTURE VARIATION RULE
 
 Across the 15 moods:
 
-- Do not reuse the same narrative structure.
-- Do not repeatedly use:
-  "You're learning..."
-  "You're searching..."
-  "You're finding..."
-  "You're trying..."
-  "You're feeling..."
+* Do not reuse the same narrative structure.
+* Do not repeatedly use:
 
-Use different narrative forms:
+  * "You're learning..."
+  * "You're searching..."
+  * "You're finding..."
+  * "You're trying..."
+  * "You're feeling..."
 
-1. Internal monologue
-2. Observation
-3. Memory
-4. Conversation
-5. Text message scenario
-6. Relationship tension
-7. Workplace situation
-8. Family dynamic
-9. Social media interaction
-10. Private realization
-11. Habit pattern
-12. Future worry
-13. Comparison with someone else
-14. Avoidance behavior
-15. Unexpected emotional trigger
-SIGN EXPRESSION RULE
-
-The horoscope must express the emotional situation
-through BOTH:
-
-1. the sign's personality traits
-2. the sign's natural coping style
-
-The sign's coping style determines HOW they react to emotions.
-
-Aries = acts
-Taurus = stabilizes
-Gemini = thinks
-Cancer = remembers
-Leo = seeks recognition
-Virgo = analyzes
-Libra = relates
-Scorpio = protects
-Sagittarius = escapes
-Capricorn = works
-Aquarius = detaches
-Pisces = imagines
 EMOTIONAL REALISM
 
-Ground every horoscope in recognizable human behavior:
+Ground every horoscope in recognizable human behavior, emotional contradictions, social dynamics, avoidance patterns, overthinking loops, self-protection, unmet expectations, and moments of self-awareness.
 
-* internal dialogue
-* emotional contradictions
-* relationship ambiguity
-* avoidance patterns
-* overthinking loops
-* social tension
-* emotional exhaustion
-* self-protection
-* quiet realizations
-* unmet expectations
-* comparison habits
-* reassurance seeking
+OPENING RULE
 
-Examples:
+The first sentence must begin with a concrete scene, behavior, action, conversation, or internal thought.
 
-* You reread a message even though you already know what it says.
-* A conversation ended hours ago but your brain is still editing it.
-* You want reassurance but dislike needing it.
-* You're waiting for effort from someone who thinks they're already giving enough.
-* The thing you're avoiding is taking more energy than doing it would.
+Do not begin with:
 
-Every horoscope must begin with:
-- a scene
-OR
-- a behavior
-OR
-- a conversation
-OR
-- an internal thought
+* You
+* You're
+* You've
+* Your
+* You're feeling
+* You're trying
+* You're searching
+* You're wondering
 
-Never begin with:
-- You're feeling
-- You're trying
-- You're searching
-- You're wondering
-
-CRITICAL OPENING RULE
-
-The first sentence MUST contain:
-
-- a concrete action
-OR
-- a concrete scene
-OR
-- a line of dialogue
-
-The first sentence MUST NOT begin with:
-
-You
-You're
-You've
-Your
 SIGN EXPRESSION RULE
 
 Every emotional experience must be filtered through the sign's natural coping style.
@@ -166,19 +81,7 @@ Pisces = imagines
 
 The same mood should feel different depending on the sign.
 
-Example:
-
-Anxious Aries:
-wants immediate action.
-
-Anxious Virgo:
-analyzes details.
-
-Anxious Aquarius:
-distances emotionally and intellectualizes.
-
-Anxious Pisces:
-imagines future pain.
+If the same horoscope could be given to another sign after changing the sign name, rewrite it.
 
 MOOD IDENTITY RULE
 
@@ -239,50 +142,20 @@ Every horoscope must contain:
 * one specific social dynamic
 * one specific moment of self-awareness
 
+Every horoscope must include at least one concrete real-world detail such as a message, conversation, workplace moment, family interaction, routine, memory trigger, or social interaction.
+
 Avoid writing that could apply equally to everyone.
-
-SCREENSHOT TEST
-
-At least one sentence should feel worth saving, sharing, or rereading later.
-
-The sentence should feel emotionally recognizable, not inspirational.
-
-ANTI-HOROSCOPE FILTER
-
-Before writing each horoscope:
-
-If a sentence could appear in a motivational quote:
-rewrite it.
-
-If a sentence could apply equally to every sign:
-rewrite it.
-
-If a sentence sounds like advice:
-replace it with observation.
-
-If a sentence sounds like a life coach:
-remove it.
 
 ANTI-TEMPLATE RULE
 
 Do not repeatedly use:
 
-* You're feeling...
-* You're trying...
-* Part of you...
-* The truth is...
-* Remember that...
-* Perhaps it's time...
-
-Vary openings using:
-
-* scenes
-* observations
-* conversations
-* habits
-* memories
-* realizations
-* specific moments
+* "You're feeling..."
+* "You're trying..."
+* "Part of you..."
+* "The truth is..."
+* "Remember that..."
+* "Perhaps it's time..."
 
 DIVERSITY RULE
 
@@ -302,62 +175,8 @@ RULES
 * Never directly mention the mood.
 * Exactly 6 sentences.
 * Between 150 and 170 words.
-* Include at least one emotionally recognizable line.
-* Use emotionally specific behavior.
 * Make each sign and mood clearly distinct.
-* Use fresh phrasing every time.
 * Avoid summaries.
 * Avoid conclusions.
 * Avoid lessons.
 * Avoid advice.
-
-OUTPUT FORMAT
-
-===MOOD: Ambitious===
-horoscope content
-
-===MOOD: Adventurous===
-horoscope content
-
-===MOOD: Creative===
-horoscope content
-
-===MOOD: Rebellious===
-horoscope content
-
-===MOOD: Confident===
-horoscope content
-
-===MOOD: Anxious===
-horoscope content
-
-===MOOD: Sad===
-horoscope content
-
-===MOOD: Lonely===
-horoscope content
-
-===MOOD: Romantic===
-horoscope content
-
-===MOOD: Nostalgic===
-horoscope content
-
-===MOOD: Exhausted===
-horoscope content
-
-===MOOD: Lazy===
-horoscope content
-
-===MOOD: Peaceful===
-horoscope content
-
-===MOOD: Daydreamy===
-horoscope content
-
-===MOOD: Irritated===
-horoscope content
-
-Generate all 15 moods exactly once.
-Output only the mood sections.
-Do not use JSON.
