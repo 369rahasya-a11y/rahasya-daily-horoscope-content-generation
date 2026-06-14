@@ -2,7 +2,7 @@ name: Daily Horoscope Generator
 
 on:
   schedule:
-    - cron: '15 18 * * *'
+    - cron: '0 18 * * *'
 
   workflow_dispatch:
 
