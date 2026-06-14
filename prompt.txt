@@ -65,6 +65,7 @@ Do not begin with:
 SIGN EXPRESSION RULE
 
 Every emotional experience must be filtered through the sign's natural coping style.
+If the sign name is removed, the reader should still be able to recognize the sign from the behavior and coping pattern.
 
 Aries = acts
 Taurus = stabilizes
