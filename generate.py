@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import random
 from datetime import datetime, timedelta
 
 from groq import Groq
@@ -38,7 +39,16 @@ MOODS = [
     "Anxious", "Sad", "Lonely", "Romantic", "Nostalgic",
     "Exhausted", "Lazy", "Peaceful", "Daydreamy", "Irritated"
 ]
-
+STYLE_MODES = [
+    "minimalist",
+    "observational",
+    "cinematic",
+    "relationship-focused",
+    "internal monologue",
+    "social realism",
+    "slightly literary",
+    "dry and conversational"
+]
 SIGN_TRAITS = {
 "Aries": "acts before thinking, direct, competitive, impulsive, hides vulnerability through action, becomes restless when emotions slow them down, dislikes waiting for clarity",
 
@@ -85,7 +95,8 @@ total_uploaded = 0
 for sign in SIGNS:
 
     print(f"\n========== {sign} ==========\n")
-
+    todays_style = random.choice(STYLE_MODES)
+    
     mood_format = "\n\n".join(
         [f"===MOOD: {m}===\nWrite horoscope here" for m in MOODS]
     )
@@ -118,6 +129,10 @@ IMPORTANT:
 
 Generate horoscopes ONLY for:
 {sign}
+
+TODAY'S WRITING STYLE
+
+Use a {todays_style} writing style today.
 
 Sign personality and behavioral patterns:
 {SIGN_TRAITS[sign]}
