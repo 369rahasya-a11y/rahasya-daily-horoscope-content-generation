@@ -48,7 +48,7 @@ NARRATION_MODES = [
     "behavior-first",
     "socially observant"
 ]
-]
+
 SIGN_TRAITS = {
 "Aries": "acts before thinking, direct, competitive, impulsive, hides vulnerability through action, becomes restless when emotions slow them down, dislikes waiting for clarity",
 
