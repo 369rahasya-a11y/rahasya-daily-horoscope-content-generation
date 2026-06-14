@@ -39,15 +39,15 @@ MOODS = [
     "Anxious", "Sad", "Lonely", "Romantic", "Nostalgic",
     "Exhausted", "Lazy", "Peaceful", "Daydreamy", "Irritated"
 ]
-STYLE_MODES = [
-    "minimalist",
+NARRATION_MODES = [
     "observational",
-    "cinematic",
-    "relationship-focused",
     "internal monologue",
-    "social realism",
-    "slightly literary",
-    "dry and conversational"
+    "conversation-driven",
+    "memory-driven",
+    "relationship-focused",
+    "behavior-first",
+    "socially observant"
+]
 ]
 SIGN_TRAITS = {
 "Aries": "acts before thinking, direct, competitive, impulsive, hides vulnerability through action, becomes restless when emotions slow them down, dislikes waiting for clarity",
@@ -95,7 +95,7 @@ total_uploaded = 0
 for sign in SIGNS:
 
     print(f"\n========== {sign} ==========\n")
-    todays_style = random.choice(STYLE_MODES)
+    todays_narration = random.choice(NARRATION_MODES)
     
     mood_format = "\n\n".join(
         [f"===MOOD: {m}===\nWrite horoscope here" for m in MOODS]
@@ -130,9 +130,11 @@ IMPORTANT:
 Generate horoscopes ONLY for:
 {sign}
 
-TODAY'S WRITING STYLE
+TODAY'S NARRATION STYLE
 
-Use a {todays_style} writing style today.
+Use a {todays_narration} narration style today.
+
+This narration style should influence how the story is told, not the sign personality.
 
 Sign personality and behavioral patterns:
 {SIGN_TRAITS[sign]}
@@ -152,6 +154,10 @@ For each mood:
 - use a different social interaction
 - use a different internal conflict
 - use a different concrete scene
+- use a different opening image
+- use a different relationship dynamic
+- do not reuse major objects from yesterday
+
 
 Keep the emotional identity of the mood the same.
 
