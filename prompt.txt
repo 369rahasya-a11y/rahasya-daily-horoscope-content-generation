@@ -11,6 +11,22 @@ The reader should feel:
 
 The content should feel like emotional observation disguised as astrology.
 
+FORBIDDEN PHRASES
+
+Never use:
+
+A part of you
+You're feeling
+You're trying
+You're wondering
+You're waiting
+Your mind
+Your heart
+The truth is
+Remember that
+Perhaps it's time
+
+If any forbidden phrase appears, rewrite.
 STYLE
 
 The writing should feel like:
@@ -84,6 +100,44 @@ The same mood should feel different depending on the sign.
 
 If the same horoscope could be given to another sign after changing the sign name, rewrite it.
 
+SIGN OBJECT BANK
+
+Aries:
+challenge, competition, risk, unfinished task
+
+Taurus:
+routine, comfort food, favorite place, familiar object
+
+Gemini:
+message thread, conversation, notification, question
+
+Cancer:
+old photo, family interaction, memory trigger
+
+Leo:
+compliment, audience, attention, recognition
+
+Virgo:
+list, mistake, schedule, unfinished detail
+
+Libra:
+friendship, partnership, social balance
+
+Scorpio:
+secret, trust issue, private conversation
+
+Sagittarius:
+trip, distance, ticket, adventure plan
+
+Capricorn:
+deadline, responsibility, work task
+
+Aquarius:
+group dynamic, idea, future possibility
+
+Pisces:
+dream, music, fantasy, imagination
+
 MOOD IDENTITY RULE
 
 Each mood has its own emotional engine.
@@ -133,6 +187,59 @@ possibility, imagination, fantasy, curiosity
 Irritated:
 boundary violations, accumulated frustration, unmet expectations
 
+SIGN COPING RULE
+
+Every horoscope must show how the sign responds to emotion.
+
+Aries:
+acts before processing
+
+Taurus:
+stabilizes and holds on
+
+Gemini:
+thinks and analyzes
+
+Cancer:
+remembers and revisits
+
+Leo:
+seeks recognition and response
+
+Virgo:
+analyzes and fixes
+
+Libra:
+evaluates relationship balance
+
+Scorpio:
+protects vulnerability
+
+Sagittarius:
+escapes through movement or possibility
+
+Capricorn:
+focuses on responsibility
+
+Aquarius:
+detaches and intellectualizes
+
+Pisces:
+imagines and emotionally absorbs
+SIGN RECOGNITION TEST
+
+The emotional situation is not the sign.
+
+The coping mechanism is the sign.
+
+After writing each horoscope, ask:
+
+"If the sign name were removed, would this still clearly feel like this sign?"
+
+If not, rewrite.
+
+The same mood must feel different across different signs.
+
 UNIQUENESS RULE
 
 Every horoscope must contain:
@@ -158,18 +265,27 @@ Do not repeatedly use:
 * "Remember that..."
 * "Perhaps it's time..."
 
-DIVERSITY RULE
+STRUCTURE DIVERSITY TEST
 
 Across the 15 moods:
 
-* vary emotional themes
-* vary relationship dynamics
-* vary sentence rhythm
-* vary social situations
-* vary internal conflicts
-* vary emotional scenarios
+Use different narrative structures.
 
-Do not reuse the same emotional situation repeatedly.
+Examples:
+
+- action first
+- scene first
+- dialogue first
+- memory first
+- observation first
+- social interaction first
+- routine first
+- thought first
+- conflict first
+
+No more than two horoscopes may share the same narrative structure.
+
+If multiple horoscopes follow the same storytelling pattern, rewrite.
 
 RULES
 
