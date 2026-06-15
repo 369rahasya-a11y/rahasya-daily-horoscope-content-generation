@@ -285,7 +285,20 @@ Examples:
 
 No more than two horoscopes may share the same narrative structure.
 
-If multiple horoscopes follow the same storytelling pattern, rewrite.
+If multiple horoscopes follow the same storytelling pattern, rewrite
+
+FINAL SELF-CHECK
+
+Before outputting each horoscope verify:
+
+1. No second-person language.
+2. Sign-specific coping mechanism present.
+3. Concrete real-world detail present.
+4. Unique emotional scenario.
+5. Different structure from other moods.
+6. No forbidden phrases.
+
+If any check fails, rewrite.
 
 RULES
 
