@@ -1,4 +1,4 @@
-GENERATE EMOTIONALLY INTELLIGENT DAILY HOROSCOPE CONTENT THAT FEELS PERSONAL, PSYCHOLOGICALLY ACCURATE, EMOTIONALLY SPECIFIC, AND SOCIALLY SHAREABLE.
+GENERATE DAILY HOROSCOPE CONTENT THAT FEELS PSYCHOLOGICALLY ACCURATE, EMOTIONALLY SPECIFIC, AND PERSONALLY RECOGNIZABLE.
 
 CORE GOAL
 
@@ -6,27 +6,21 @@ The reader should feel:
 
 * "This is weirdly accurate."
 * "Why does this sound exactly like me?"
-* "I needed to hear this."
-* "Someone finally put this feeling into words."
+* "I didn't realize I was doing that."
+* "That is exactly what's been happening lately."
 
 The content should feel like emotional observation disguised as astrology.
 
-FORBIDDEN PHRASES
+PRIORITY ORDER
 
-Never use:
+1. Sign authenticity
+2. Emotional realism
+3. Retention
+4. Mood identity
+5. Writing style
 
-A part of you
-You're feeling
-You're trying
-You're wondering
-You're waiting
-Your mind
-Your heart
-The truth is
-Remember that
-Perhaps it's time
+If forced to choose, preserve sign authenticity.
 
-If any forbidden phrase appears, rewrite.
 STYLE
 
 The writing should feel like:
@@ -34,76 +28,100 @@ The writing should feel like:
 * a late-night realization
 * subtle inner dialogue
 * emotionally observant modern writing
-* a close friend noticing what someone refuses to admit
+* a close friend noticing something someone refuses to admit
 
 The writing must be:
 
 * emotionally human
-* modern and conversational
-* intimate but believable
-* emotionally realistic
+* conversational
 * psychologically specific
+* socially realistic
+* believable
 
-Avoid advice, motivation, coaching, therapy language, spirituality, manifestation, prophecy, fortune-telling, and generic positivity.
+Avoid:
 
-STRUCTURE VARIATION RULE
+* advice
+* motivation
+* coaching
+* therapy language
+* manifestation
+* spirituality
+* fortune telling
+* generic positivity
 
-Across the 15 moods:
-Do not repeatedly use the same narration approach across moods.
-* Do not reuse the same narrative structure.
-* Do not repeatedly use:
+FORBIDDEN PHRASES
 
-  * "You're learning..."
-  * "You're searching..."
-  * "You're finding..."
-  * "You're trying..."
-  * "You're feeling..."
+Never use:
 
-EMOTIONAL REALISM
+* A part of you
+* You're feeling
+* You're trying
+* You're wondering
+* You're waiting
+* Your mind
+* Your heart
+* The truth is
+* Remember that
+* Perhaps it's time
 
-Ground every horoscope in recognizable human behavior, emotional contradictions, social dynamics, avoidance patterns, overthinking loops, self-protection, unmet expectations, and moments of self-awareness.
+Rewrite if any appear.
 
 OPENING RULE
 
-The first sentence must begin with a concrete scene, behavior, action, conversation, or internal thought.
+The first sentence must begin with:
 
-Do not begin with:
+* a concrete action
+* a real-world behavior
+* a conversation
+* a memory trigger
+* a social interaction
+* a specific observation
+
+Never begin with:
 
 * You
 * You're
 * You've
 * Your
-* You're feeling
-* You're trying
-* You're searching
-* You're wondering
 
 SIGN EXPRESSION RULE
 
-Every emotional experience must be filtered through the sign's natural coping style.
-If the sign name is removed, the reader should still be able to recognize the sign from the behavior and coping pattern.
+The emotional situation is not the sign.
+
+The coping mechanism is the sign.
+
+Every emotional experience must be filtered through the sign's natural response pattern.
+
+If the sign name is removed, the reader should still recognize the sign.
 
 Aries = acts
+
 Taurus = stabilizes
-Gemini = thinks
+
+Gemini = analyzes
+
 Cancer = remembers
+
 Leo = seeks recognition
-Virgo = analyzes
-Libra = relates
-Scorpio = protects
-Sagittarius = escapes
-Capricorn = works
-Aquarius = detaches
-Pisces = imagines
 
-The same mood should feel different depending on the sign.
+Virgo = fixes
 
-If the same horoscope could be given to another sign after changing the sign name, rewrite it.
+Libra = evaluates relationships
+
+Scorpio = protects vulnerability
+
+Sagittarius = escapes through possibility
+
+Capricorn = focuses on responsibility
+
+Aquarius = detaches and intellectualizes
+
+Pisces = imagines and absorbs
 
 SIGN OBJECT BANK
 
 Aries:
-challenge, competition, risk, unfinished task
+challenge, competition, unfinished task, risk
 
 Taurus:
 routine, comfort food, favorite place, familiar object
@@ -149,19 +167,19 @@ Adventurous:
 curiosity, novelty, freedom, exploration
 
 Creative:
-expression, unfinished ideas, inspiration, imagination
+expression, unfinished ideas, imagination
 
 Rebellious:
-boundaries, independence, resistance, authenticity
+boundaries, independence, authenticity
 
 Confident:
-self-trust, certainty, ownership, courage
+certainty, ownership, courage
 
 Anxious:
 uncertainty, prediction loops, reassurance seeking
 
 Sad:
-loss, grief, disappointment, emotional heaviness
+loss, disappointment, emotional heaviness
 
 Lonely:
 disconnection, invisibility, unmet connection
@@ -173,140 +191,89 @@ Nostalgic:
 memory, longing, comparison between then and now
 
 Exhausted:
-overextension, burnout, emotional depletion
+burnout, depletion, overextension
 
 Lazy:
-resistance, rest, avoidance, low urgency
+avoidance, resistance, low urgency
 
 Peaceful:
-acceptance, simplicity, emotional steadiness
+acceptance, simplicity, steadiness
 
 Daydreamy:
-possibility, imagination, fantasy, curiosity
+possibility, fantasy, curiosity
 
 Irritated:
-boundary violations, accumulated frustration, unmet expectations
-
-SIGN COPING RULE
-
-Every horoscope must show how the sign responds to emotion.
-
-Aries:
-acts before processing
-
-Taurus:
-stabilizes and holds on
-
-Gemini:
-thinks and analyzes
-
-Cancer:
-remembers and revisits
-
-Leo:
-seeks recognition and response
-
-Virgo:
-analyzes and fixes
-
-Libra:
-evaluates relationship balance
-
-Scorpio:
-protects vulnerability
-
-Sagittarius:
-escapes through movement or possibility
-
-Capricorn:
-focuses on responsibility
-
-Aquarius:
-detaches and intellectualizes
-
-Pisces:
-imagines and emotionally absorbs
-SIGN RECOGNITION TEST
-
-The emotional situation is not the sign.
-
-The coping mechanism is the sign.
-
-After writing each horoscope, ask:
-
-"If the sign name were removed, would this still clearly feel like this sign?"
-
-If not, rewrite.
-
-The same mood must feel different across different signs.
+boundary violations, accumulated frustration
 
 UNIQUENESS RULE
 
 Every horoscope must contain:
 
 * one specific behavior
-* one specific emotional contradiction
-* one specific thought pattern
-* one specific social dynamic
-* one specific moment of self-awareness
+* one emotional contradiction
+* one recognizable thought pattern
+* one social dynamic
+* one moment of self-awareness
 
-Every horoscope must include at least one concrete real-world detail such as a message, conversation, workplace moment, family interaction, routine, memory trigger, or social interaction.
+Every horoscope must include at least one real-world detail such as:
+
+* a message
+* a conversation
+* a workplace interaction
+* a family interaction
+* a routine
+* a memory trigger
+* a social moment
 
 Avoid writing that could apply equally to everyone.
 
-ANTI-TEMPLATE RULE
+RETENTION RULE
 
-Do not repeatedly use:
+Every horoscope must contain:
 
-* "You're feeling..."
-* "You're trying..."
-* "Part of you..."
-* "The truth is..."
-* "Remember that..."
-* "Perhaps it's time..."
+1. One present emotional reality.
+2. One emotional pattern becoming clearer.
+3. One internal contradiction becoming harder to ignore.
 
-STRUCTURE DIVERSITY TEST
+Focus on emotional momentum.
 
-Across the 15 moods:
+Do not predict events.
 
-Use different narrative structures.
+Do not promise outcomes.
 
-Examples:
+The reader should feel that something is unfolding emotionally.
 
-- action first
-- scene first
-- dialogue first
-- memory first
-- observation first
-- social interaction first
-- routine first
-- thought first
-- conflict first
+ANTI-THERAPY RULE
 
-No more than two horoscopes may share the same narrative structure.
+Avoid:
 
-If multiple horoscopes follow the same storytelling pattern, rewrite
+* healing
+* processing emotions
+* working through
+* self-care
+* closure
+* growth journey
+* inner child
+* holding space
 
-FINAL SELF-CHECK
-
-Before outputting each horoscope verify:
-
-1. No second-person language.
-2. Sign-specific coping mechanism present.
-3. Concrete real-world detail present.
-4. Unique emotional scenario.
-5. Different structure from other moods.
-6. No forbidden phrases.
-
-If any check fails, rewrite.
+Avoid language that sounds like therapy or self-help content.
 
 RULES
 
 * Never directly mention the mood.
-* Exactly 6 sentences.
-* Between 150 and 170 words.
+* Exactly 4-5 sentences.
+* Between 80 and 110 words.
 * Make each sign and mood clearly distinct.
+* Use concrete situations instead of abstractions.
 * Avoid summaries.
 * Avoid conclusions.
 * Avoid lessons.
 * Avoid advice.
+
+FINAL TEST
+
+Before outputting each horoscope ask:
+
+"If the zodiac sign were removed, would this still clearly feel like that sign?"
+
+If not, rewrite.
