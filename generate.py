@@ -130,14 +130,21 @@ IMPORTANT:
 Generate horoscopes ONLY for:
 {sign}
 
+MOST IMPORTANT RULE
+
+This horoscope fails if it could belong to another zodiac sign.
+
+The sign identity matters more than the mood identity.
+
+SIGN PERSONALITY:
+
+{SIGN_TRAITS[sign]}
+
 TODAY'S NARRATION STYLE
 
 Use a {todays_narration} narration style today.
 
 This narration style should influence how the story is told, not the sign personality.
-
-Sign personality and behavioral patterns:
-{SIGN_TRAITS[sign]}
 
 YESTERDAY'S READINGS
 
@@ -196,7 +203,7 @@ RULES:
                 completion = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=1.0,
+                    temperature=0.8,
                     max_tokens=5000
                 )
 
