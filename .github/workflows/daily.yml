@@ -1,43 +1,41 @@
 name: Daily Horoscope Generator
 
 on:
-schedule:
-- cron: '0 18 * * *'
+  schedule:
+    - cron: '0 18 * * *'
 
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-generate:
-runs-on: ubuntu-latest
+  generate:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.11'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-  - name: Install Dependencies
-    run: pip install -r requirements.txt
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
-  - name: Run Generator
-    env:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-    run: python generate.py
+      - name: Run Generator
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python generate.py
 
-  - name: Trigger Marketing Selector
-    env:
-      GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-    run: |
-      curl -L \
-        -X POST \
-        -H "Accept: application/vnd.github+json" \
-        -H "Authorization: Bearer $GH_TOKEN" \
-        https://api.github.com/repos/369rahasya-a11y/rahasya-marketing-selector/actions/workflows/marketing-selector.yml/dispatches \
-        -d '{"ref":"main"}'
-```
+      - name: Trigger Marketing Selector
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/369rahasya-a11y/rahasya-marketing-selector/actions/workflows/marketing-selector.yml/dispatches \
+            -d '{"ref":"main"}'
