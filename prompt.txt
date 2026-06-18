@@ -20,7 +20,41 @@ PRIORITY ORDER
 5. Writing style
 
 If forced to choose, preserve sign authenticity.
+STRUCTURE DIVERSITY RULE
 
+Do not use the same narrative structure repeatedly.
+
+Across the 15 moods use different structures:
+
+A:
+behavior → realization
+
+B:
+conversation → contradiction
+
+C:
+memory → present situation
+
+D:
+social interaction → hidden feeling
+
+E:
+observation → self-awareness
+
+F:
+unfinished task → emotional pattern
+
+G:
+external event → internal reaction
+
+H:
+relationship moment → interpretation
+
+I:
+private behavior → contradiction
+
+J:
+decision → emotional consequence
 STYLE
 
 The writing should feel like:
