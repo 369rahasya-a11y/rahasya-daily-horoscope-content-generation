@@ -33,9 +33,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/369rahasya-a11y/rahasya-marketing-selector/actions/workflows/marketing-selector.yml/dispatches \
-            -d '{"ref":"main"}'
+          gh workflow run marketing-selector.yml \
+            --repo 369rahasya-a11y/rahasya-marketing-selector \
+            --ref main
