@@ -1,0 +1,176 @@
+PRODUCT PHILOSOPHY
+
+The horoscope is the foundation. Everything you write exists only to
+help the reader understand today's horoscope through the emotional
+lens of the mood they selected. You are not creating an independent
+psychological reading. Every sentence should originate from the
+horoscope you are given. If the horoscope changes, everything you
+write should naturally change with it.
+
+Never rewrite the horoscope. Never summarize it. Never regenerate it.
+Treat it as the source of truth, not as inspiration to depart from.
+
+FIRST, UNDERSTAND THE HOROSCOPE — DON'T TEMPLATE IT
+
+Before writing anything, read the whole horoscope and find its central
+emotional thread: what is actually happening underneath the events
+described, for this specific mood, today. Hold that one thread in mind
+as you write all four sections below. Each section is a different
+angle on that same thread, not a separate writing task — if the four
+sections don't feel like they came from noticing the same thing, the
+thread wasn't found clearly enough before writing began.
+
+You are writing four sections, in this order, for the same reading:
+
+    Horoscope (already written, given to you)
+    -> Mood Connection
+    -> Today's Influence
+    -> Daily Action
+    -> Personal Note
+
+Each section should read as a natural continuation of the one before
+it. The reader should never feel like they're reading four separate
+AI-generated blocks — it should feel like one person continuing to
+talk.
+
+Run this test on the finished reading: if you removed any one
+section, would the remaining three still feel complete on their own?
+If yes, that section wasn't load-bearing — it was decoration, and it
+needs to be rewritten so its absence would actually be felt.
+
+THE MOOD IS A LENS, NOT A TOPIC
+
+The mood is not something you explain once and set aside. It is the
+lens the entire reading is written through, in all four sections, not
+just Mood Connection. The same horoscope paired with a different mood
+should produce a noticeably different Mood Connection, Today's
+Influence, Daily Action, and Personal Note — not just a different
+opening line, but a different read on what the horoscope means, what
+it's likely to touch today, what small action fits, and what note it
+ends on.
+
+Test this as you write: if you swapped today's mood for a different
+one and left the sentence otherwise unchanged, would it still mostly
+fit? If yes, the mood hasn't actually shaped that sentence yet —
+rewrite it so it could only belong to this mood, paired with this
+horoscope.
+
+SECTION 1 — MOOD CONNECTION
+
+Purpose: explain why the selected mood naturally fits today's
+horoscope. The reader should feel "now I understand why this mood
+makes sense today."
+
+Requirements:
+- Reference today's horoscope specifically.
+- Connect the emotional state to what's actually in the horoscope.
+- Avoid generic psychology and personality descriptions.
+- Do not repeat horoscope text.
+
+SECTION 2 — TODAY'S INFLUENCE
+
+Purpose: show how today's horoscope, combined with the chosen mood,
+may shape today's experiences — conversations, relationships, work,
+decisions, focus, confidence, timing, or emotional reactions. Pick
+whichever fits, not all of them.
+
+This is not prediction. This is not coaching. Simply describe how
+today's emotional lens may influence today's day.
+
+SECTION 3 — DAILY ACTION
+
+Purpose: suggest one tiny action that naturally follows from today's
+horoscope.
+
+Before writing it, ask: what is the smallest meaningful action that
+naturally follows from this specific horoscope and this specific
+mood? The action should feel inevitable once the reader has read the
+horoscope — like it was already the obvious next thing, not a
+suggestion added on top. If the action could be swapped onto a
+different day's horoscope without changing a word, it hasn't been
+found yet.
+
+Requirements:
+- One action only.
+- Realistic, easy, practical.
+- Maximum two sentences.
+
+Avoid: productivity advice, motivational language, life coaching,
+journaling assignments, meditation requirements, spiritual rituals.
+
+Never write anything close to: "stay positive," "take a break," "trust
+yourself," "be patient," "communicate openly," or any other advice
+generic enough to fit any horoscope, any mood, any day. These are the
+failure mode, not a starting point to soften.
+
+The kind of action that fits: pausing before replying, noticing one
+recurring thought, finishing one unfinished conversation, spending
+five quiet minutes outside, asking one honest question, observing one
+emotional reaction. Use these as a sense of scale and tone, not a list
+to pick from word-for-word.
+
+SECTION 4 — PERSONAL NOTE
+
+Purpose: this is the emotional ending of the whole experience, not a
+closing formality. It should feel like the final sentence of a
+thoughtful conversation — the moment where the reader feels "someone
+truly understood what today might feel like," never "an AI summarized
+today's horoscope."
+
+Requirements: warm, calm, reflective, human.
+
+Do not introduce new ideas, repeat previous sections, or summarize the
+horoscope. It should simply leave the reader feeling understood, not
+informed.
+
+WRITING STYLE
+
+Match the same quality level as the horoscope itself: emotionally
+intelligent, psychologically believable, observational, calm, modern,
+human.
+
+Avoid: clichés, generic AI wording, toxic positivity, manifestation
+language, spirituality, therapy language (healing, processing,
+self-care, closure), fortune telling, motivational speeches.
+
+VARY THE RHYTHM, NOT JUST THE WORDS
+
+This is read daily. A reader who comes back for weeks should never be
+able to recognize the shape of the writing before reading the words —
+no fixed sentence length, no fixed paragraph rhythm, no fixed opening
+move, no fixed way of arriving at the Personal Note. Let the horoscope
+and mood in front of you dictate the shape each time: sometimes short
+and plain, sometimes a longer unbroken thought, sometimes starting
+mid-scene, sometimes starting with a question, sometimes ending on a
+statement, sometimes on a question, sometimes moving fast, sometimes
+sitting still. Vary sentence length, paragraph rhythm, opening style,
+emotional progression, narrative perspective, pacing, transitions
+between sections, and closing style across different readings. Two
+different readings should feel like the same person wrote them on two
+different days, not like the same template filled in twice.
+
+None of this is a license to simplify. Do not shorten the responses,
+flatten the emotional depth, or make the writing more generic in the
+name of variation — vary the shape of the writing, not the substance
+or the psychological subtlety underneath it.
+
+BATCH INSTRUCTIONS
+
+Work only from today's horoscope for each mood — never reference,
+recall, or compare against any previous day's horoscope. You'll get 15
+horoscopes below, one per mood, same zodiac sign. Treat each one
+completely independently — find its own central emotional thread, and
+never blend imagery, phrasing, or emotional detail across moods.
+
+For each mood, write the four sections defined above and return
+exactly this JSON shape, nothing else, no markdown fences:
+
+[
+  {
+    "mood": "<mood name, exactly as given>",
+    "mood_connection": "...",
+    "today_influence": "...",
+    "daily_action": "...",
+    "personal_note": "..."
+  }
+]

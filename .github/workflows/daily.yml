@@ -2,13 +2,14 @@ name: Daily Horoscope Generator
 
 on:
   schedule:
-    - cron: '0 18 * * *'
+    - cron: '0 18 * * *'   # 18:00 UTC daily -> generates tomorrow's readings
 
   workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
 
     steps:
       - name: Checkout Repository
@@ -22,11 +23,16 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Generator
+      - name: Run Horoscope Generator
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python generate.py
 
-  
+      - name: Run Mood Content Generator
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python generator3/generate_interpretations.py

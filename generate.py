@@ -279,7 +279,8 @@ RULES:
                     "horoscope_date": target_date,
                     "sign": sign,
                     "mood": item["mood"],
-                    "content": item["content"]
+                    "content": item["content"],
+                    "gen3_status": "pending",
                 },
                 on_conflict="horoscope_date,sign,mood"
             ).execute()
