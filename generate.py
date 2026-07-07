@@ -7,12 +7,12 @@ from datetime import datetime, timedelta
 from groq import Groq
 from supabase import create_client
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY_GEN1")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 if not GROQ_API_KEY:
-    raise Exception("GROQ_API_KEY_GEN1 missing")
+    raise Exception("GROQ_API_KEY missing")
 
 if not SUPABASE_URL:
     raise Exception("SUPABASE_URL missing")
