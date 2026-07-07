@@ -16,12 +16,12 @@ from constants import SIGNS, MOODS  # noqa: E402
 from prompt_builder import build_prompt  # noqa: E402
 from validators import validate_batch  # noqa: E402
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY_GEN1")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 if not GROQ_API_KEY:
-    raise Exception("GROQ_API_KEY missing")
+    raise Exception("GROQ_API_KEY_GEN1 missing")
 if not SUPABASE_URL:
     raise Exception("SUPABASE_URL missing")
 if not SUPABASE_KEY:
