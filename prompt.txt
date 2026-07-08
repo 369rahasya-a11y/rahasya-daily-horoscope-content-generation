@@ -1,5 +1,28 @@
 GENERATE DAILY HOROSCOPE CONTENT THAT FEELS PSYCHOLOGICALLY ACCURATE, EMOTIONALLY SPECIFIC, AND PERSONALLY RECOGNIZABLE.
 
+CORE GOAL
+
+The reader should feel:
+
+* "This is weirdly accurate."
+* "Why does this sound exactly like me?"
+* "I didn't realize I was doing that."
+* "That is exactly what's been happening lately."
+
+The content should feel like emotional observation disguised as astrology.
+
+PRIORITY ORDER
+
+1. Sign authenticity
+2. Emotional realism
+3. Retention
+4. Mood identity
+5. Writing style
+
+If forced to choose, preserve sign authenticity.
+STRUCTURE DIVERSITY RULE
+
+Do not use the same narrative structure repeatedly.
 
 Across the 15 moods use different structures:
 
@@ -78,26 +101,22 @@ Never use:
 Rewrite if any appear.
 
 OPENING RULE
-Start with:
 
-• action
+The first sentence must begin with:
 
-• observation
+* a concrete action
+* a real-world behavior
+* a conversation
+* a memory trigger
+* a social interaction
+* a specific observation
 
-• conversation
+Never begin with:
 
-• memory
-
-Never start with:
-
-You
-
-You're
-
-You've
-
-Your
-
+* You
+* You're
+* You've
+* Your
 SCENE DIVERSITY RULE
 
 Across the 15 moods, avoid repeating the same setting, environment, or social context.
@@ -112,6 +131,21 @@ Do not repeatedly use:
 * old memories
 
 Use a wide variety of real-world situations.
+
+Examples:
+
+* grocery store
+* train ride
+* family dinner
+* group chat
+* gym
+* commute
+* workplace
+* waiting room
+* late-night walk
+* weekend plan
+* unfinished errand
+* social gathering
 
 The same sign should experience different moods through different situations.
 
@@ -238,28 +272,42 @@ Irritated:
 boundary violations, accumulated frustration
 
 UNIQUENESS RULE
-Each horoscope must include:
 
-• one specific behavior
+Every horoscope must contain:
 
-• one emotional contradiction
+* one specific behavior
+* one emotional contradiction
+* one recognizable thought pattern
+* one social dynamic
+* one moment of self-awareness
 
-• one recognizable thought pattern
+Every horoscope must include at least one real-world detail such as:
 
-• one social interaction
+* a message
+* a conversation
+* a workplace interaction
+* a family interaction
+* a routine
+* a memory trigger
+* a social moment
 
-• one concrete real-world detail
+Avoid writing that could apply equally to everyone.
 
 RETENTION RULE
-Show:
 
-• present emotional reality
+Every horoscope must contain:
 
-• evolving emotional pattern
+1. One present emotional reality.
+2. One emotional pattern becoming clearer.
+3. One internal contradiction becoming harder to ignore.
 
-• internal contradiction
+Focus on emotional momentum.
 
-Never predict events or promise outcomes.
+Do not predict events.
+
+Do not promise outcomes.
+
+The reader should feel that something is unfolding emotionally.
 
 ANTI-THERAPY RULE
 
@@ -279,68 +327,19 @@ Avoid language that sounds like therapy or self-help content.
 RULES
 
 * Never directly mention the mood.
-* Exactly 4-5 sentences.
-* Between 80 and 110 words.
+* Exactly 5-6 sentences.
+* Between 100 and 150 words.
 * Make each sign and mood clearly distinct.
 * Use concrete situations instead of abstractions.
 * Avoid summaries.
 * Avoid conclusions.
 * Avoid lessons.
 * Avoid advice.
-OUTPUT FORMAT
 
-Return the output exactly in the following format.
+FINAL TEST
 
-===MOOD: Ambitious===
-<horoscope>
+Before outputting each horoscope ask:
 
-===MOOD: Adventurous===
-<horoscope>
+"If the zodiac sign were removed, would this still clearly feel like that sign?"
 
-===MOOD: Creative===
-<horoscope>
-
-===MOOD: Rebellious===
-<horoscope>
-
-===MOOD: Confident===
-<horoscope>
-
-===MOOD: Anxious===
-<horoscope>
-
-===MOOD: Sad===
-<horoscope>
-
-===MOOD: Lonely===
-<horoscope>
-
-===MOOD: Romantic===
-<horoscope>
-
-===MOOD: Nostalgic===
-<horoscope>
-
-===MOOD: Exhausted===
-<horoscope>
-
-===MOOD: Lazy===
-<horoscope>
-
-===MOOD: Peaceful===
-<horoscope>
-
-===MOOD: Daydreamy===
-<horoscope>
-
-===MOOD: Irritated===
-<horoscope>
-
-Rules:
-- Keep every mood header exactly as shown.
-- Do not change the spelling.
-- Do not remove the `===`.
-- Do not add markdown.
-- Do not add code blocks.
-- Do not add explanations.
-- Output only the 15 mood sections.
+If not, rewrite.
