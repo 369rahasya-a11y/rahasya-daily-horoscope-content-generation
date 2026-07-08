@@ -54,7 +54,7 @@ def call_groq(prompt: str):
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.6,
-                max_tokens=5000,
+                max_tokens=3500,
             )
             return completion.choices[0].message.content.strip()
         except Exception as e:
@@ -84,13 +84,12 @@ for sign in SIGNS:
         .select("mood,content")
         .eq("horoscope_date", target_date)
         .eq("sign", sign)
-        .eq("gen3_status", "pending")
         .execute()
     )
     rows = rows_resp.data or []
 
     if not rows:
-        print(f"No pending rows for {sign}, skipping.")
+        print(f"No rows found for {sign} on {target_date}, skipping.")
         continue
 
     if {r["mood"] for r in rows} != EXPECTED_MOODS:
@@ -166,8 +165,6 @@ if failed_signs:
     for sign in set(failed_signs):
         supabase.table("horoscopes").update({
             "gen3_status": "failed"
-        }).eq("horoscope_date", target_date).eq("sign", sign).eq(
-            "gen3_status", "pending"
-        ).execute()
+        }).eq("horoscope_date", target_date).eq("sign", sign).execute()
 else:
     print("\nALL SIGNS PROCESSED SUCCESSFULLY")
