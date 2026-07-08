@@ -51,7 +51,7 @@ def call_groq(prompt: str):
         try:
             print(f"  API attempt {attempt + 1}")
             completion = client.chat.completions.create(
-                model="openai/gpt-oss-120b",
+                model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.6,
                 max_tokens=5000,
