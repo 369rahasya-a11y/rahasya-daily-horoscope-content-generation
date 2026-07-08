@@ -201,7 +201,7 @@ RULES:
                 print(f"API Attempt {attempt + 1}")
 
                 completion = client.chat.completions.create(
-                    model="openai/gpt-oss-120b"
+                    model="openai/gpt-oss-120b",
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.8,
                     max_tokens=5000
