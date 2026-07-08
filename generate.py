@@ -204,7 +204,7 @@ RULES:
                     model="openai/gpt-oss-120b",
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.8,
-                    max_tokens=5000
+                    max_tokens=3000
                 )
 
                 break
