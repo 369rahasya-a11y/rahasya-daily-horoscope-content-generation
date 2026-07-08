@@ -32,7 +32,7 @@ jobs:
 
       - name: Run Mood Content Generator
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_API_KEY_GEN1: ${{ secrets.GROQ_API_KEY_GEN1 }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python generator3/generate_interpretations.py
