@@ -287,4 +287,60 @@ RULES
 * Avoid conclusions.
 * Avoid lessons.
 * Avoid advice.
+OUTPUT FORMAT
 
+Return the output exactly in the following format.
+
+===MOOD: Ambitious===
+<horoscope>
+
+===MOOD: Adventurous===
+<horoscope>
+
+===MOOD: Creative===
+<horoscope>
+
+===MOOD: Rebellious===
+<horoscope>
+
+===MOOD: Confident===
+<horoscope>
+
+===MOOD: Anxious===
+<horoscope>
+
+===MOOD: Sad===
+<horoscope>
+
+===MOOD: Lonely===
+<horoscope>
+
+===MOOD: Romantic===
+<horoscope>
+
+===MOOD: Nostalgic===
+<horoscope>
+
+===MOOD: Exhausted===
+<horoscope>
+
+===MOOD: Lazy===
+<horoscope>
+
+===MOOD: Peaceful===
+<horoscope>
+
+===MOOD: Daydreamy===
+<horoscope>
+
+===MOOD: Irritated===
+<horoscope>
+
+Rules:
+- Keep every mood header exactly as shown.
+- Do not change the spelling.
+- Do not remove the `===`.
+- Do not add markdown.
+- Do not add code blocks.
+- Do not add explanations.
+- Output only the 15 mood sections.
