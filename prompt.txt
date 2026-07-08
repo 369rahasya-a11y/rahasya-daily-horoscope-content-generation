@@ -1,28 +1,5 @@
 GENERATE DAILY HOROSCOPE CONTENT THAT FEELS PSYCHOLOGICALLY ACCURATE, EMOTIONALLY SPECIFIC, AND PERSONALLY RECOGNIZABLE.
 
-CORE GOAL
-
-The reader should feel:
-
-* "This is weirdly accurate."
-* "Why does this sound exactly like me?"
-* "I didn't realize I was doing that."
-* "That is exactly what's been happening lately."
-
-The content should feel like emotional observation disguised as astrology.
-
-PRIORITY ORDER
-
-1. Sign authenticity
-2. Emotional realism
-3. Retention
-4. Mood identity
-5. Writing style
-
-If forced to choose, preserve sign authenticity.
-STRUCTURE DIVERSITY RULE
-
-Do not use the same narrative structure repeatedly.
 
 Across the 15 moods use different structures:
 
@@ -101,22 +78,26 @@ Never use:
 Rewrite if any appear.
 
 OPENING RULE
+Start with:
 
-The first sentence must begin with:
+• action
 
-* a concrete action
-* a real-world behavior
-* a conversation
-* a memory trigger
-* a social interaction
-* a specific observation
+• observation
 
-Never begin with:
+• conversation
 
-* You
-* You're
-* You've
-* Your
+• memory
+
+Never start with:
+
+You
+
+You're
+
+You've
+
+Your
+
 SCENE DIVERSITY RULE
 
 Across the 15 moods, avoid repeating the same setting, environment, or social context.
@@ -131,21 +112,6 @@ Do not repeatedly use:
 * old memories
 
 Use a wide variety of real-world situations.
-
-Examples:
-
-* grocery store
-* train ride
-* family dinner
-* group chat
-* gym
-* commute
-* workplace
-* waiting room
-* late-night walk
-* weekend plan
-* unfinished errand
-* social gathering
 
 The same sign should experience different moods through different situations.
 
@@ -272,42 +238,28 @@ Irritated:
 boundary violations, accumulated frustration
 
 UNIQUENESS RULE
+Each horoscope must include:
 
-Every horoscope must contain:
+• one specific behavior
 
-* one specific behavior
-* one emotional contradiction
-* one recognizable thought pattern
-* one social dynamic
-* one moment of self-awareness
+• one emotional contradiction
 
-Every horoscope must include at least one real-world detail such as:
+• one recognizable thought pattern
 
-* a message
-* a conversation
-* a workplace interaction
-* a family interaction
-* a routine
-* a memory trigger
-* a social moment
+• one social interaction
 
-Avoid writing that could apply equally to everyone.
+• one concrete real-world detail
 
 RETENTION RULE
+Show:
 
-Every horoscope must contain:
+• present emotional reality
 
-1. One present emotional reality.
-2. One emotional pattern becoming clearer.
-3. One internal contradiction becoming harder to ignore.
+• evolving emotional pattern
 
-Focus on emotional momentum.
+• internal contradiction
 
-Do not predict events.
-
-Do not promise outcomes.
-
-The reader should feel that something is unfolding emotionally.
+Never predict events or promise outcomes.
 
 ANTI-THERAPY RULE
 
@@ -336,10 +288,3 @@ RULES
 * Avoid lessons.
 * Avoid advice.
 
-FINAL TEST
-
-Before outputting each horoscope ask:
-
-"If the zodiac sign were removed, would this still clearly feel like that sign?"
-
-If not, rewrite.
