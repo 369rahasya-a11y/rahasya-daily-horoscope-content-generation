@@ -163,7 +163,11 @@ completely independently — find its own central emotional thread, and
 never blend imagery, phrasing, or emotional detail across moods.
 
 For each mood, write the four sections defined above and return
-exactly this JSON shape, nothing else, no markdown fences:
+exactly this JSON shape, nothing else, no markdown fences, no
+introductory sentence of any kind. Do not write "Here are the
+responses" or anything similar before the array. The very first
+character of your entire response must be [ and the very last
+character must be ]. Nothing before it, nothing after it.
 
 [
   {
