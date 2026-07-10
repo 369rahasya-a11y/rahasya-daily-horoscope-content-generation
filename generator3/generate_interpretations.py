@@ -14,6 +14,7 @@ from groq import (
     APIStatusError,
 )
 from supabase import create_client
+from postgrest.exceptions import APIError as SupabaseAPIError
 
 load_dotenv()  # no-op in CI where .env doesn't exist; loads it locally
 
@@ -39,11 +40,32 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 print("CONNECTED")
 
+# Diagnostic markers so a GitHub Actions log can directly answer
+# "is this actually the updated code, and which dependency versions
+# are installed" -- rather than having to infer it. requirements.txt
+# doesn't pin versions, so what's installed can legitimately differ
+# between runs; this makes that visible instead of silent.
+try:
+    import groq as _groq_pkg
+    import supabase as _supabase_pkg
+    import postgrest as _postgrest_pkg
+    print(
+        f"DEPENDENCY VERSIONS: groq={getattr(_groq_pkg, '__version__', 'unknown')}, "
+        f"supabase={getattr(_supabase_pkg, '__version__', 'unknown')}, "
+        f"postgrest={getattr(_postgrest_pkg, '__version__', 'unknown')}"
+    )
+except Exception as e:
+    print(f"Could not determine dependency versions: {e}")
+
+print("GENERATOR 3 CODE VERSION MARKER: validates-before-parse, "
+      "distinguishes-429, guards-db-calls")
+
 # Generator 3 always targets the same date Generator 1 just wrote for.
 # Generator 1 writes to tomorrow (UTC+1 day); Generator 3 runs right
 # after and interprets that same batch -- same convention as
 # Generator 2, run independently and in parallel with it.
-target_date =  "2026-07-10"
+target_date = (datetime.utcnow().date() + timedelta(days=1)).isoformat()
+
 EXPECTED_MOODS = set(MOODS)
 
 failed_signs = []
@@ -157,13 +179,26 @@ def call_groq(prompt: str):
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.6,
-                max_tokens=3500,
+                max_tokens=6500,
             )
 
             raw = completion.choices[0].message.content
             raw = raw.strip() if raw else ""
 
             _log_request_result(prompt, raw, completion)
+
+            finish_reason = None
+            try:
+                finish_reason = completion.choices[0].finish_reason
+            except Exception:
+                pass
+            if finish_reason == "length":
+                print(
+                    "  WARNING: response was truncated by max_tokens "
+                    "(finish_reason='length') -- the model had more to say "
+                    "than it was allowed to. This will very likely fail "
+                    "JSON parsing since the array won't be closed."
+                )
 
             return raw
 
@@ -244,6 +279,33 @@ def parse_json_array(raw: str):
             cleaned = cleaned[4:]
         cleaned = cleaned.strip()
 
+    # Real production failure mode (confirmed from actual Groq
+    # responses, not just theoretical): the model sometimes prepends
+    # a conversational preamble before the array, e.g.
+    # "Here are the responses for each mood:\n\n[...]" -- with or
+    # without markdown fences around the array itself. That text is
+    # non-empty, so the empty-response check above doesn't catch it,
+    # and it isn't a fenced block either, so the fence-stripping above
+    # doesn't catch it -- json.loads() then fails on the preamble
+    # sentence with the exact same "Expecting value" message, for a
+    # different underlying reason than true emptiness.
+    #
+    # Fix: locate the outermost [ ... ] in the text and use that
+    # slice, regardless of what surrounds it. This handles any
+    # preamble/postamble wording, not just this one observed phrase.
+    first_bracket = cleaned.find("[")
+    last_bracket = cleaned.rfind("]")
+    if first_bracket == -1 or last_bracket == -1 or last_bracket < first_bracket:
+        raise EmptyOrInvalidResponseError(
+            "Could not find a JSON array ('[' ... ']') anywhere in the "
+            "response -- see the full raw response logged above."
+        )
+    if first_bracket > 0:
+        skipped_preamble = cleaned[:first_bracket].strip()
+        print(f"  NOTE: stripped {len(skipped_preamble)} chars of preamble "
+              f"text before the JSON array: {skipped_preamble!r}")
+    cleaned = cleaned[first_bracket:last_bracket + 1]
+
     if not cleaned:
         raise EmptyOrInvalidResponseError(
             "Response was non-empty before markdown-fence stripping, but "
@@ -267,14 +329,34 @@ def parse_json_array(raw: str):
 for sign in SIGNS:
     print(f"\n========== {sign} ==========\n")
 
-    rows_resp = (
-        supabase.table("horoscopes")
-        .select("mood,content")
-        .eq("horoscope_date", target_date)
-        .eq("sign", sign)
-        .execute()
-    )
-    rows = rows_resp.data or []
+    rows = None
+    for db_attempt in range(3):
+        try:
+            rows_resp = (
+                supabase.table("horoscopes")
+                .select("mood,content")
+                .eq("horoscope_date", target_date)
+                .eq("sign", sign)
+                .execute()
+            )
+            rows = rows_resp.data or []
+            break
+        except SupabaseAPIError as e:
+            print(f"  SUPABASE READ FAILED (attempt {db_attempt + 1}) for {sign}: "
+                  f"code={e.code} message={e.message} details={e.details}")
+            if db_attempt < 2:
+                time.sleep(5)
+        except Exception as e:
+            print(f"  SUPABASE READ FAILED (attempt {db_attempt + 1}) for {sign} "
+                  f"(non-API error, e.g. network/connection): {e}")
+            if db_attempt < 2:
+                time.sleep(5)
+
+    if rows is None:
+        print(f"  Could not read rows for {sign} after 3 attempts -- "
+              f"marking as failed and moving to next sign.")
+        failed_signs.append(sign)
+        continue
 
     if not rows:
         print(f"No rows found for {sign} on {target_date}, skipping.")
@@ -313,17 +395,22 @@ for sign in SIGNS:
             print("Updating rows...")
             count = 0
             for entry in parsed:
-                supabase.table("horoscopes").update({
-                    "mood_connection": entry["mood_connection"],
-                    "today_influence": entry["today_influence"],
-                    "daily_action": entry["daily_action"],
-                    "personal_note": entry["personal_note"],
-                    "gen3_status": "done",
-                    "gen3_generated_at": datetime.utcnow().isoformat(),
-                }).eq("horoscope_date", target_date).eq("sign", sign).eq(
-                    "mood", entry["mood"]
-                ).execute()
-                count += 1
+                try:
+                    supabase.table("horoscopes").update({
+                        "mood_connection": entry["mood_connection"],
+                        "today_influence": entry["today_influence"],
+                        "daily_action": entry["daily_action"],
+                        "personal_note": entry["personal_note"],
+                        "gen3_status": "done",
+                        "gen3_generated_at": datetime.utcnow().isoformat(),
+                    }).eq("horoscope_date", target_date).eq("sign", sign).eq(
+                        "mood", entry["mood"]
+                    ).execute()
+                    count += 1
+                except SupabaseAPIError as e:
+                    print(f"  SUPABASE WRITE FAILED for {sign}/{entry.get('mood')}: "
+                          f"code={e.code} message={e.message} details={e.details}")
+                    raise
 
             succeeded_signs.append(sign)
             total_updated += count
@@ -388,8 +475,12 @@ if failed_signs:
     print("\nFAILED SIGNS (marked gen3_status='failed'):")
     print(sorted(set(failed_signs)))
     for sign in set(failed_signs):
-        supabase.table("horoscopes").update({
-            "gen3_status": "failed"
-        }).eq("horoscope_date", target_date).eq("sign", sign).execute()
+        try:
+            supabase.table("horoscopes").update({
+                "gen3_status": "failed"
+            }).eq("horoscope_date", target_date).eq("sign", sign).execute()
+        except Exception as e:
+            print(f"  Could not mark {sign} as failed in Supabase "
+                  f"(non-fatal, run summary above is still accurate): {e}")
 else:
     print("\nALL SIGNS PROCESSED SUCCESSFULLY")
