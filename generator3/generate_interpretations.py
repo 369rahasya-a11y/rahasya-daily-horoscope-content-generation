@@ -43,8 +43,7 @@ print("CONNECTED")
 # Generator 1 writes to tomorrow (UTC+1 day); Generator 3 runs right
 # after and interprets that same batch -- same convention as
 # Generator 2, run independently and in parallel with it.
-target_date = (datetime.utcnow().date() + timedelta(days=1)).isoformat()
-
+target_date =  "2026-07-10"
 EXPECTED_MOODS = set(MOODS)
 
 failed_signs = []
