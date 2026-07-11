@@ -176,7 +176,7 @@ def call_groq(prompt: str):
         print(f"  API attempt {attempt + 1}")
         try:
             completion = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="meta-llama/llama-4-scout-17b-16e-instruct"
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.6,
                 max_tokens=6500,
