@@ -327,8 +327,8 @@ Avoid language that sounds like therapy or self-help content.
 RULES
 
 * Never directly mention the mood.
-* Exactly 5-6 sentences.
-* Between 100 and 150 words.
+* Exactly 4-5 sentences.
+* Between 80 and 110 words.
 * Make each sign and mood clearly distinct.
 * Use concrete situations instead of abstractions.
 * Avoid summaries.
