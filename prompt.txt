@@ -328,7 +328,7 @@ RULES
 
 * Never directly mention the mood.
 * Exactly 4-5 sentences.
-* Between 80 and 110 words.
+* Between 120 to 150 words.
 * Make each sign and mood clearly distinct.
 * Use concrete situations instead of abstractions.
 * Avoid summaries.
